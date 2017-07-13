@@ -64,6 +64,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TegManager.xaml.cs">
+      <DependentUpon>TegManager.xaml</DependentUpon>
+    </Compile>
     <Compile Include="XMLUtils.cs" />
     <Compile Include="NewsList.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
@@ -75,6 +78,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TegManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

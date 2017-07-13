@@ -172,5 +172,11 @@ namespace DobroNewsLine
             SettingsWindow settingsWindow = new SettingsWindow();
             settingsWindow.ShowDialog();
         }
+
+        private void TegManageButton_Click(object sender, RoutedEventArgs e)
+        {
+            TegManager tegManagerWindow = new TegManager();
+            tegManagerWindow.ShowDialog();
+        }
     }
 }
