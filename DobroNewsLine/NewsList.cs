@@ -27,21 +27,18 @@ namespace DobroNewsLine
                             case XmlNodeType.Element:
                                 if (reader.Name == "advert")
                                 {
-                                    //try
-                                    //{
-                                    //    FilmFileClass.ID = new Guid(reader.GetAttribute("GUID"));
-                                    //}
-                                    //catch
-                                    //{
-                                    //    FilmFileClass.ID = Guid.NewGuid();
-                                    //}
-                                    //NewsClass.Body = reader.GetAttribute("body");
+                                    NewsClass.UID = new Guid(reader.GetAttribute("UID"));
                                     NewsClass.Title = reader.GetAttribute("title");
                                     NewsClass.Phone = reader.GetAttribute("phone");
                                     NewsClass.Link = new Uri(reader.GetAttribute("link"));
                                     NewsClass.Date = reader.GetAttribute("date");
                                     NewsClass.CityRegion = reader.GetAttribute("cityRegion");
                                     NewsClass.Age = reader.GetAttribute("age");
+                                    string UIds = reader.GetAttribute("TegCollection");
+                                    if (!string.IsNullOrEmpty(UIds))
+                                    {
+                                        NewsClass.Tegs = UIds.Split(':');
+                                    }
                                     if (reader.IsEmptyElement)
                                     {
                                         _news.Add(NewsClass);
@@ -50,10 +47,7 @@ namespace DobroNewsLine
                                 }
                                 break;
                             case XmlNodeType.Text:                                
-                                break;
-                            /*case XmlNodeType.XmlDeclaration:
-                            case XmlNodeType.ProcessingInstruction:
-                            case XmlNodeType.Comment:*/
+                                break;                            
                             case XmlNodeType.EndElement:
                                 if (reader.Name == "advert")
                                 {
@@ -69,19 +63,28 @@ namespace DobroNewsLine
                 }
             }
         }
+
+
     }
 
     public class NewsItem
     {
+        public Guid UID { get; set; }
         public string Body { get; set; }
         public string Title { get; set; }
         public string Phone { get; set; }
-        public Uri Link { get; set; }
-        protected Guid ID { get; set; }
+        public Uri Link { get; set; }        
         public string Date { get; set; }
         public string CityRegion { get; set; }
         public string Age { get; set; }
         public List<string> Picts { get; set; }
+        public string[] Tegs { get; set; }
+    }
+
+    public class NewsTeg
+    {
+        public int UID {get; set;}
+        public string Name {get; set;}
     }
 
     

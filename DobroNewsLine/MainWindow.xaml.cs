@@ -175,8 +175,13 @@ namespace DobroNewsLine
 
         private void TegManageButton_Click(object sender, RoutedEventArgs e)
         {
-            TegManager tegManagerWindow = new TegManager();
-            tegManagerWindow.ShowDialog();
+            if (MainGridData.SelectedItem != null)
+            {
+                NewsItem Selected = MainGridData.SelectedItem as NewsItem;
+                TegManager tegManagerWindow = new TegManager(Selected);
+                tegManagerWindow.ShowDialog();
+            }
+            
         }
     }
 }

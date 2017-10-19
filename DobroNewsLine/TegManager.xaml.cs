@@ -25,10 +25,39 @@ namespace DobroNewsLine
             InitializeComponent();
             TegCollection = new Dictionary<int, string>();
             CurrTegCollection = new Dictionary<int, string>();
-            TegCollection = XMLUtils.GetTegsCollection();
+            TegCollection = XMLUtils.GetAllTegsCollection();
             AllTegsLB.ItemsSource = TegCollection;
             CurrTegsLB.ItemsSource = CurrTegCollection;
         }
+
+        public TegManager(NewsItem newsItem)
+        {
+            InitializeComponent();
+            CurrNewsItem = newsItem;
+            TegCollection = new Dictionary<int, string>();
+            CurrTegCollection = new Dictionary<int, string>();
+            TegCollection = XMLUtils.GetAllTegsCollection();
+            string[] UIDsArray = newsItem.Tegs;
+            if (UIDsArray != null) 
+            { 
+                PrepareTegsCollections(UIDsArray, TegCollection, CurrTegCollection);
+            }
+            AllTegsLB.ItemsSource = TegCollection;
+            CurrTegsLB.ItemsSource = CurrTegCollection;
+        }
+
+        private void PrepareTegsCollections(string[] UIDsArray, Dictionary<int, string> LeftTegCollection, Dictionary<int, string> RightTegCollection)
+        {
+            for (int cnt = 0; cnt < UIDsArray.Length; cnt++)
+            {
+                int TegUID = Convert.ToInt16(UIDsArray[cnt]);
+                string TegName = LeftTegCollection[TegUID];
+                RightTegCollection.Add(TegUID, TegName);
+                LeftTegCollection.Remove(TegUID);
+            }
+        }
+
+        private NewsItem CurrNewsItem { get; set; }
 
         public Dictionary<int, string> TegCollection { get; set; }
 
@@ -41,14 +70,7 @@ namespace DobroNewsLine
                 return;
             }
             KeyValuePair<int, string> SelTeg = (KeyValuePair<int, string>)AllTegsLB.SelectedItem;
-            //Dictionary<int, string> SelTegDict = new Dictionary<int, string> { { SelTeg.Key, SelTeg.Value } };
-
-            //ListBoxItem itm = new ListBoxItem();
-            //itm.Content = SelTeg.Value;
-            //CurrTegsLB.Items.Add(itm);
-
-            TegCollection.Remove(SelTeg.Key);
-            //AllTegsLB.ItemsSource = TegCollection;
+            TegCollection.Remove(SelTeg.Key);  
             AllTegsLB.Items.Refresh();
             CurrTegCollection.Add(SelTeg.Key, SelTeg.Value);
             CurrTegsLB.ItemsSource = CurrTegCollection;
@@ -62,14 +84,7 @@ namespace DobroNewsLine
                 return;
             }
             KeyValuePair<int, string> SelTeg = (KeyValuePair<int, string>)CurrTegsLB.SelectedItem;
-            //Dictionary<int, string> SelTegDict = new Dictionary<int, string> { { SelTeg.Key, SelTeg.Value } };
-
-            //ListBoxItem itm = new ListBoxItem();
-            //itm.Content = SelTeg.Value;
-            //CurrTegsLB.Items.Add(itm);
-
-            CurrTegCollection.Remove(SelTeg.Key);
-            //AllTegsLB.ItemsSource = TegCollection;
+            CurrTegCollection.Remove(SelTeg.Key);            
             CurrTegsLB.Items.Refresh();
             TegCollection.Add(SelTeg.Key, SelTeg.Value);
             AllTegsLB.ItemsSource = TegCollection;
@@ -144,5 +159,10 @@ namespace DobroNewsLine
             AllTegsLB.Items.Refresh();
             CurrTegsLB.Items.Refresh();
         }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            XMLUtils.SaveNewList(CurrNewsItem);
+        }        
     }
 }
