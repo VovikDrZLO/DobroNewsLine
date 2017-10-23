@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DobroNewsLine"
+    targetNamespace="http://tempuri.org/DobroNewsLine.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/DobroNewsLine.xsd"
+    xmlns:mstns="http://tempuri.org/DobroNewsLine.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:element name="DobroNewsLine">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element  name="advert">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="advertPict">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Pict" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>                        
+                        <xs:attribute name="base64Data" type="xs:base64Binary"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>                  
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="title" type="xs:string" use="required" />
+            <xs:attribute name="phone" type="xs:integer" use="required" />
+            <xs:attribute name="body" type="xs:string" use="required" />
+            <xs:attribute name="link" type="xs:string" use="optional" />
+            <xs:attribute name="date" type="xs:string" use="required" />
+            <xs:attribute name="cityRegion" type="xs:string" use="required" />
+            <xs:attribute name="age" type="xs:string" />            
+          </xs:complexType>
+        </xs:element>
+        
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
