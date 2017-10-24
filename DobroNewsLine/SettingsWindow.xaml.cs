@@ -62,17 +62,17 @@ namespace DobroNewsLine
                 {
                     NewsItem newsItem = new NewsItem();
                     string Title = tab.Rows[0].Cells[0].InnerHtml;
-                    var InnerDoc = parser.Parse(Title);
+                    var InnerDoc = parser.Parse(Title);                   
                     newsItem.Link = new Uri(InnerDoc.QuerySelector("a").Attributes[0].Value);
-                    newsItem.Title = InnerDoc.QuerySelector("img").Attributes[0].Value;
+                    newsItem.Title = InnerDoc.QuerySelector("img").Attributes[0].Value;                    
                     AddPageData(newsItem);
                     XMLUtils.SaveAdvertData(newsItem);
-                }
+                }                
             }
-        }
+        }        
 
         public void AddPageData(NewsItem newsItem)
-        {
+        { 
             Uri uri = newsItem.Link;
             string html = new WebClient().DownloadString(uri);
             var parser = new HtmlParser();
@@ -164,13 +164,40 @@ namespace DobroNewsLine
                     }
                     Body = Body.Trim();
                     //AddAttribute(NewsXElement, "body", Body);
-                    newsItem.Body = Body;
+                    newsItem.Body = Body; 
                 }
             }
         }
+        
 
+        public XElement CreateNewsXElement(string title, string link)
+        {
+            XElement FilmElement = new XElement("advert",
+                new XAttribute("title", title),
+                new XAttribute("link", link)
+            );
+            return FilmElement;
+        }
 
+        public void AddAttribute(XElement XMLElement, string AttributeName, string AttributeValue)
+        {
+            XAttribute attribute = new XAttribute(AttributeName, AttributeValue);
+            XMLElement.Add(attribute);
+        }
 
+        public string ConvertImage(string ImgUrl)
+        {
+            try
+            {
+                byte[] ImgBodyByteArray = new WebClient().DownloadData(ImgUrl);
+                string ImgBase64 = Convert.ToBase64String(ImgBodyByteArray);
+                return ImgBase64;
+            }
+            catch
+            {
+                return "";
+            }
+        }
         public bool ValidateXML(string XMLDoc) //Valid
         {
             XmlDocument ValidDoc = new XmlDocument();
@@ -196,9 +223,42 @@ namespace DobroNewsLine
             return true;
         }
 
-        
-        
-       
+        public IList<NewsItem> GetNewsItemFromXML()
+        {
+            XDocument myXDocument = new XDocument();
+            myXDocument = XDocument.Load(@"C:\Users\cons_inspiron\Documents\Visual Studio 2012\Projects\DobroNewsLine\DobroNewsLine\DobroNewsLine.xml"); 
+            //IEnumerable<XElement> NewsList = myXDocument.Root.XPathSelectElements("//prefix:DobroNewsLine/prefix:advert");            
+            var NewsList = myXDocument.XPathSelectElements("//DobroNewsLine/advert");
+            IList<NewsItem> NewsItemsList = new List<NewsItem>();
+            foreach (XElement news in NewsList)
+            {
+                NewsItem NewsClass = ConvertXElementToNewsItem(news);
+                NewsItemsList.Add(NewsClass);
+            }
+            myXDocument = null;
+            return NewsItemsList;
+        }
 
+        public NewsItem ConvertXElementToNewsItem(XElement news) //valid
+        {
+            NewsItem NewsClass = new NewsItem();
+            NewsClass.Body = (string)news.Attribute("body");
+            NewsClass.Title = (string)news.Attribute("title");
+            NewsClass.Phone = (string)news.Attribute("phone");
+            NewsClass.Link = new Uri((string)news.Attribute("link"));
+            NewsClass.Date = (string)news.Attribute("date");
+            NewsClass.CityRegion = (string)news.Attribute("cityRegion");
+            NewsClass.Age = (string)news.Attribute("age");
+            return NewsClass;
+        }
+
+        public XDocument SettingsXMLDoc //valid
+        {
+            get
+            {
+                XDocument XMLDoc = XDocument.Load(@"C:\Users\cons_inspiron\Documents\Visual Studio 2012\Projects\DobroNewsLine\DobroNewsLine\DobroNewsLine.xml");
+                return XMLDoc;
+            }
+        }
     }
 }

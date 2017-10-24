@@ -57,6 +57,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="XMLUtils.cs" />
+
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -68,6 +69,10 @@
     <Compile Include="NewsLineItemWindow.xaml.cs">
       <DependentUpon>NewsLineItemWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TegManager.xaml.cs">
+      <DependentUpon>TegManager.xaml</DependentUpon>
+    </Compile>
+
     <Compile Include="NewsList.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
@@ -82,6 +87,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>   
+    <Page Include="TegManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

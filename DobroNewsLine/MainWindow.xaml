@@ -33,6 +33,7 @@
             <Button Content="X" Canvas.Left="267" Canvas.Top="10" Width="19" Click="ClearFilter_Click"/>
             <Button Content="Import" Canvas.Left="621" Canvas.Top="10" Width="56" Click="OpenImportWnd_Click"/>
             <Button Content="ClearData" Canvas.Left="541" Canvas.Top="10" Width="75"  Click="ClearData_Click"/>
+            <Button x:Name="TegManageButton" Content="TegManage" Canvas.Left="520" Canvas.Top="10" Width="75" Click="TegManageButton_Click"/>
         </Canvas>
     </Grid>
 </Window>

@@ -17,7 +17,7 @@ namespace DobroNewsLine
                 {
                     IList<NewsItem> _news = new List<NewsItem> { };
                     XmlDocument NewsXml = new XmlDocument();
-                    NewsXml.Load(@"C:\Users\Volodimir\Documents\Visual Studio 2013\Projects\DobroNewsLine\DobroNewsLine\DobroNewsLine.xml");
+                    NewsXml.Load(@"C:\Users\cons_inspiron\Documents\Visual Studio 2012\Projects\DobroNewsLine\DobroNewsLine\DobroNewsLine.xml");
                     XmlNodeReader reader = new XmlNodeReader(NewsXml);
                     NewsItem NewsClass = new NewsItem();
                     while (reader.Read())
@@ -52,15 +52,25 @@ namespace DobroNewsLine
                                         }
                                     }
                                     NewsClass.Body = reader.GetAttribute("body");
+                                    NewsClass.UID = new Guid(reader.GetAttribute("UID"));
                                     NewsClass.Title = reader.GetAttribute("title");
                                     NewsClass.Phone = reader.GetAttribute("phone");
                                     NewsClass.Link = new Uri(reader.GetAttribute("link"));
                                     NewsClass.Date = reader.GetAttribute("date");
                                     NewsClass.CityRegion = reader.GetAttribute("cityRegion");
                                     NewsClass.Age = reader.GetAttribute("age");
+                                    string UIds = reader.GetAttribute("TegCollection");
+
                                     NewsClass.PictList = PictList;
-                                    _news.Add(NewsClass);
-                                    NewsClass = new NewsItem();
+                                    if (!string.IsNullOrEmpty(UIds))
+                                    {
+                                        NewsClass.Tegs = UIds.Split(':');
+                                    }
+                                    if (reader.IsEmptyElement)
+                                    {
+                                        _news.Add(NewsClass);
+                                        NewsClass = new NewsItem();
+                                    }
                                 }
                                 break;
                             case XmlNodeType.Text:                                
@@ -87,15 +97,23 @@ namespace DobroNewsLine
 
     public class NewsItem
     {
+
+        public Guid UID { get; set; }
         public string Body { get; set; }
         public string Title { get; set; }
         public string Phone { get; set; }
-        public Uri Link { get; set; }
-        protected Guid ID { get; set; }
+        public Uri Link { get; set; }        
         public string Date { get; set; }
         public string CityRegion { get; set; }
         public string Age { get; set; }
-        public List<string> PictList { get; set; }
+        public List<string> Picts { get; set; }
+        public string[] Tegs { get; set; }
         public decimal Price { get; set; }
+    }
+
+    public class NewsTeg
+    {
+        public int UID {get; set;}
+        public string Name {get; set;}
     }
 }

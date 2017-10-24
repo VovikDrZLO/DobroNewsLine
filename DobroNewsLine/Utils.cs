@@ -23,7 +23,6 @@ namespace DobroNewsLine
 {    
     static public class Utils
     {
-
         public static string ConvertImage(string ImgUrl)
         {
             try
@@ -37,6 +36,7 @@ namespace DobroNewsLine
                 return "";
             }
         }
+
 
         static public void ShowWarningDialog(string Message)
         {
