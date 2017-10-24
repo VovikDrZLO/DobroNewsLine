@@ -30,10 +30,10 @@
             <xs:attribute name="link" type="xs:string" use="optional" />
             <xs:attribute name="date" type="xs:string" use="required" />
             <xs:attribute name="cityRegion" type="xs:string" use="required" />
-            <xs:attribute name="age" type="xs:string" />
+            <xs:attribute name="age" type="xs:string" />   
             <xs:attribute name="TegCollection" type="xs:string" />
           </xs:complexType>
-        </xs:element>
+        </xs:element>                           
         <xs:element  name="TegList">
           <xs:complexType>
             <xs:sequence>

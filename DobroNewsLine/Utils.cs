@@ -23,6 +23,20 @@ namespace DobroNewsLine
 {    
     static public class Utils
     {
+        public static string ConvertImage(string ImgUrl)
+        {
+            try
+            {
+                byte[] ImgBodyByteArray = new WebClient().DownloadData(ImgUrl);
+                string ImgBase64 = Convert.ToBase64String(ImgBodyByteArray);
+                return ImgBase64;
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
 
         static public void ShowWarningDialog(string Message)
         {
