@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,9 +34,6 @@ namespace DobroNewsLine
     //7. Import Counter
     //8. Main Pict in grid
     //9. 
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -48,9 +45,9 @@ namespace DobroNewsLine
             list.Add("City");
             list.Add("Body");
             SearchColumnComboBox.ItemsSource = list;
-            MainGridData.DataContext = new NewsList();            
-        }  
-        
+            MainGridData.DataContext = new NewsList();           
+        }                 
+
 
         public bool ValidateXML(string XMLDoc) //Valid
         {
@@ -76,7 +73,6 @@ namespace DobroNewsLine
             }
             return true;
         }
-
         public IList<NewsItem> GetNewsItemFromXML()
         {            
             XDocument myXDocument = SettingsXMLDoc;
@@ -90,7 +86,6 @@ namespace DobroNewsLine
             myXDocument = null;
             return NewsItemsList;
         }
-
         public NewsItem ConvertXElementToNewsItem(XElement news) //valid
         {
             NewsItem NewsClass = new NewsItem();
@@ -103,7 +98,6 @@ namespace DobroNewsLine
             NewsClass.Age = (string)news.Attribute("age");           
             return NewsClass;
         }
-
         public XDocument SettingsXMLDoc //valid
         {
             get
@@ -123,7 +117,6 @@ namespace DobroNewsLine
                 return NewsItemsList;
             }
         }
-
         private void SearchBtn_Click(object sender, RoutedEventArgs e)
         {
             if (SearchColumnComboBox.SelectedItem == null) return;
@@ -181,6 +174,31 @@ namespace DobroNewsLine
         {
             SettingsWindow settingsWindow = new SettingsWindow();
             settingsWindow.ShowDialog();
+
+        }              
+
+        private void MyClick(object sender, RoutedEventArgs e)
+        {
+            string link = (((TextBlock)sender).DataContext as NewsItem).Link.OriginalString;
+            System.Diagnostics.Process.Start(link);
+        }
+
+        private void ClearData_Click(object sender, RoutedEventArgs e)
+        {
+
+            XDocument AdvXML = XMLUtils.SettingsXMLDoc;
+            AdvXML.Root.RemoveAll();
+            AdvXML.Save(@"C:\Users\Volodimir\Documents\Visual Studio 2013\Projects\DobroNewsLine\DobroNewsLine\DobroNewsLine.xml");
+
+        }
+
+        private void MainGridData_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
+            NewsItem newsItem = (NewsItem)MainGridData.SelectedItem;
+            NewsLineItemWindow newsLineItemWindow = new NewsLineItemWindow(newsItem);
+            newsLineItemWindow.ShowDialog();
+
         }
 
         private void TegManageButton_Click(object sender, RoutedEventArgs e)
@@ -190,8 +208,8 @@ namespace DobroNewsLine
                 NewsItem Selected = MainGridData.SelectedItem as NewsItem;
                 TegManager tegManagerWindow = new TegManager(Selected);
                 tegManagerWindow.ShowDialog();
-            }
-            
+            }           
+
         }
     }
 }

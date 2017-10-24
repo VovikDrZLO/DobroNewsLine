@@ -1,0 +1,23 @@
+﻿<Window x:Class="DobroNewsLine.NewsLineItemWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:DobroNewsLine"
+        Title="NewsLineItemWindow" Height="482.1" Width="916">    
+        <Window.DataContext>
+        <local:NewsItem/>
+        </Window.DataContext>
+    <Grid>
+        <TextBlock x:Name="BodyTextBlock" HorizontalAlignment="Left" Height="292" Margin="10,114,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="410" Text="{Binding Path=Body}"/>
+        <TextBox x:Name="TitleTextBox" HorizontalAlignment="Left" Height="26" Margin="59,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="361" Text="{Binding Path=Title}"/>
+        <TextBox x:Name="PhoneTextControl" HorizontalAlignment="Left" Height="26" Margin="59,72,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="361" Text="{Binding Path=Phone}"/>
+        <TextBox x:Name="CityRegionTextBlock" HorizontalAlignment="Left" Height="26" Margin="59,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="{Binding Path=CityRegion}"/>
+        <TextBox x:Name="PriceTextBlock" HorizontalAlignment="Left" Height="26" Margin="286,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="134" Text="{Binding Path=Price}"/>
+        <Label Content="City" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.368,-0.192"/>
+        <Label Content="Title" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="44"/>
+        <Label Content="Phone" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
+        <Label Content="Price" HorizontalAlignment="Left" Margin="241,41,0,0" VerticalAlignment="Top" Width="40"/>
+        <Image x:Name="AdvImage" HorizontalAlignment="Left" Height="396" Margin="452,10,0,0" VerticalAlignment="Top" Width="446"/>
+        <Button x:Name="PrevButtom" Content="Prew" HorizontalAlignment="Left" Margin="452,411,0,0" VerticalAlignment="Top" Width="75" Click="PrevButtom_Click" Visibility="Hidden"/>
+        <Button x:Name="NextButton" Content="Next" HorizontalAlignment="Left" Margin="546,411,0,0" VerticalAlignment="Top" Width="75" Click="NextButton_Click" Visibility="Hidden"/>      
+    </Grid>
+</Window>

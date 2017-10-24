@@ -3,14 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="SettingsWindow" Height="300" Width="222.637">
     <Grid Margin="5,5,2,5">
-        <Label Content="Category ID" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" Height="25"/>
-        <Image HorizontalAlignment="Left" Height="100" Margin="10,10,0,0" VerticalAlignment="Top" Width="162"/>
-        <TextBox HorizontalAlignment="Left" Margin="102,120,0,0" TextWrapping="Wrap" x:Name="CategoryIdTextBox" 
-                   VerticalAlignment="Top" Height="25" Width="98" PreviewTextInput="NumberValidationTextBox"/>
-        <Label Content="PagesCount" HorizontalAlignment="Left" Margin="10,145,0,0" VerticalAlignment="Top" Height="25"/>
-        <TextBox HorizontalAlignment="Left" Margin="102,145,0,0" TextWrapping="Wrap" PreviewTextInput="NumberValidationTextBox" 
-                   VerticalAlignment="Top" Height="25" Width="98" x:Name="PageCountTextBox"/>
-        <Button Content="Get_Data" HorizontalAlignment="Left" Margin="10,175,0,0" VerticalAlignment="Top" Width="75" Click="Get_DataButton_Click"/>
-
+        <Label Content="Category ID" HorizontalAlignment="Left" Margin="10,127,0,0" VerticalAlignment="Top" Height="25"/>
+        <Image HorizontalAlignment="Left" Height="102" Margin="10,10,0,0" VerticalAlignment="Top" Width="188" Source="http://ukrgo.ua/graphics/logo_ukrgo.png"/>
+        <TextBox HorizontalAlignment="Left" Margin="102,127,0,0" TextWrapping="Wrap" x:Name="CategoryIdTextBox" 
+                   VerticalAlignment="Top" Height="25" Width="82" PreviewTextInput="NumberValidationTextBox"/>
+        <Label Content="PagesCount" HorizontalAlignment="Left" Margin="10,157,0,0" VerticalAlignment="Top" Height="25"/>
+        <TextBox HorizontalAlignment="Left" Margin="102,157,0,0" TextWrapping="Wrap" PreviewTextInput="NumberValidationTextBox" 
+                   VerticalAlignment="Top" Height="25" Width="82" x:Name="PageCountTextBox"/>
+        <Button Content="Get_Data" HorizontalAlignment="Left" Margin="10,228,0,0" VerticalAlignment="Top" Width="75" Click="Get_DataButton_Click"/>
+        <Label Content="City" HorizontalAlignment="Left" Margin="10,187,0,0" VerticalAlignment="Top" Height="25"/>
+        <TextBox HorizontalAlignment="Left" Margin="102,187,0,0" TextWrapping="Wrap" 
+                   VerticalAlignment="Top" Height="25" Width="82" x:Name="CityTextBox"/>
     </Grid>
 </Window>

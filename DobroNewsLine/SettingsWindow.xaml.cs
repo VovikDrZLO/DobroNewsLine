@@ -34,8 +34,10 @@ namespace DobroNewsLine
 
         private void Get_DataButton_Click(object sender, RoutedEventArgs e)
         {
-
-            ParthingSite("44", "1");
+            string SubsectionId = CategoryIdTextBox.Text;
+            string PagesCount = PageCountTextBox.Text;
+            string CityName = CityTextBox.Text;
+            ParthingSite(SubsectionId, PagesCount, CityName);
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
@@ -44,11 +46,11 @@ namespace DobroNewsLine
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        public void ParthingSite(string SubsectionId, string PagesCount)
+        public void ParthingSite(string SubsectionId, string PagesCount, string CityName)
         {
             for (int cnt = 1; cnt <= Convert.ToInt16(PagesCount); cnt++)
             {
-                Uri uri = new Uri("http://ukrgo.ua/view_subsection.php?id_subsection=" + SubsectionId + "&search=&page=" + cnt);
+                Uri uri = new Uri("http://" + CityName + ".ukrgo.com/view_subsection.php?id_subsection=" + SubsectionId + "&search=&page=" + cnt);
                 string html = new WebClient().DownloadString(uri);
                 var parser = new HtmlParser();
                 var document = parser.Parse(html);
@@ -60,21 +62,17 @@ namespace DobroNewsLine
                 {
                     NewsItem newsItem = new NewsItem();
                     string Title = tab.Rows[0].Cells[0].InnerHtml;
-                    var InnerDoc = parser.Parse(Title);
-                    //string link = InnerDoc.QuerySelector("a").Attributes[0].Value;
-                    //string title = InnerDoc.QuerySelector("img").Attributes[0].Value;
+                    var InnerDoc = parser.Parse(Title);                   
                     newsItem.Link = new Uri(InnerDoc.QuerySelector("a").Attributes[0].Value);
-                    newsItem.Title = InnerDoc.QuerySelector("img").Attributes[0].Value;
-                    //XElement FilmXElement = CreateNewsXElement(title, link);
+                    newsItem.Title = InnerDoc.QuerySelector("img").Attributes[0].Value;                    
                     AddPageData(newsItem);
                     XMLUtils.SaveAdvertData(newsItem);
-                }
-                
+                }                
             }
         }        
 
         public void AddPageData(NewsItem newsItem)
-        {            
+        { 
             Uri uri = newsItem.Link;
             string html = new WebClient().DownloadString(uri);
             var parser = new HtmlParser();
@@ -91,14 +89,14 @@ namespace DobroNewsLine
                     {
                         string ImgLinkRight = imgList[cnt].GetAttribute("src");
                         var ImgLink = "http://ukrgo.com" + ImgLinkRight.Substring(1);
-                        string ImgBase64String = ConvertImage(ImgLink);
+                        string ImgBase64String = Utils.ConvertImage(ImgLink);
                         if (ImgBase64String.Length > 0)
                         {
-                            if (newsItem.Picts == null)
+                            if (newsItem.PictList == null)
                             {
-                                newsItem.Picts = new List<string>();
+                                newsItem.PictList = new List<string>();
                             }
-                            newsItem.Picts.Add(ImgBase64String);
+                            newsItem.PictList.Add(ImgBase64String);
                             //XElement ImgElement = new XElement("Pict", new XAttribute("base64Data", ImgBase64String));                            
                             //NewsXElement.Add(ImgElement);
                         }
@@ -200,7 +198,6 @@ namespace DobroNewsLine
                 return "";
             }
         }
-
         public bool ValidateXML(string XMLDoc) //Valid
         {
             XmlDocument ValidDoc = new XmlDocument();
@@ -263,6 +260,5 @@ namespace DobroNewsLine
                 return XMLDoc;
             }
         }
-
     }
 }

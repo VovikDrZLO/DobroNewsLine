@@ -27,6 +27,31 @@ namespace DobroNewsLine
                             case XmlNodeType.Element:
                                 if (reader.Name == "advert")
                                 {
+                                    //try
+                                    //{
+                                    //    FilmFileClass.ID = new Guid(reader.GetAttribute("GUID"));
+                                    //}
+                                    //catch
+                                    //{
+                                    //    FilmFileClass.ID = Guid.NewGuid();
+                                    //}
+                                    
+                                    var Current = reader.ReadSubtree();
+                                    List<string> PictList = new List<string>();
+
+                                    while (Current.Read()) 
+                                    {
+                                        switch (Current.NodeType)
+                                        {
+                                            case XmlNodeType.Element:
+                                                if (Current.Name == "Pict")
+                                                {
+                                                    PictList.Add(Current.GetAttribute("base64Data"));
+                                                }
+                                                break;
+                                        }
+                                    }
+                                    NewsClass.Body = reader.GetAttribute("body");
                                     NewsClass.UID = new Guid(reader.GetAttribute("UID"));
                                     NewsClass.Title = reader.GetAttribute("title");
                                     NewsClass.Phone = reader.GetAttribute("phone");
@@ -35,6 +60,8 @@ namespace DobroNewsLine
                                     NewsClass.CityRegion = reader.GetAttribute("cityRegion");
                                     NewsClass.Age = reader.GetAttribute("age");
                                     string UIds = reader.GetAttribute("TegCollection");
+
+                                    NewsClass.PictList = PictList;
                                     if (!string.IsNullOrEmpty(UIds))
                                     {
                                         NewsClass.Tegs = UIds.Split(':');
@@ -47,7 +74,10 @@ namespace DobroNewsLine
                                 }
                                 break;
                             case XmlNodeType.Text:                                
-                                break;                            
+                                break;
+                            /*case XmlNodeType.XmlDeclaration:
+                            case XmlNodeType.ProcessingInstruction:
+                            case XmlNodeType.Comment:*/
                             case XmlNodeType.EndElement:
                                 if (reader.Name == "advert")
                                 {
@@ -63,12 +93,11 @@ namespace DobroNewsLine
                 }
             }
         }
-
-
     }
 
     public class NewsItem
     {
+
         public Guid UID { get; set; }
         public string Body { get; set; }
         public string Title { get; set; }
@@ -79,6 +108,7 @@ namespace DobroNewsLine
         public string Age { get; set; }
         public List<string> Picts { get; set; }
         public string[] Tegs { get; set; }
+        public decimal Price { get; set; }
     }
 
     public class NewsTeg
@@ -86,6 +116,4 @@ namespace DobroNewsLine
         public int UID {get; set;}
         public string Name {get; set;}
     }
-
-    
 }
