@@ -24,6 +24,16 @@ using System.Collections.ObjectModel;
 
 namespace DobroNewsLine
 {
+    //TODO
+    //1. Import photo merge 
+    //2. Photo delete
+    //3. Notes + fields edit
+    //4. NewsItems delete
+    //5. Teg filtration
+    //6. Import whith filtration
+    //7. Import Counter
+    //8. Main Pict in grid
+    //9. 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
