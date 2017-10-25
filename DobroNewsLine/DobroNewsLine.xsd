@@ -16,7 +16,8 @@
                 <xs:complexType>
                   <xs:sequence>
                     <xs:element name="Pict" maxOccurs="unbounded" minOccurs="0">
-                      <xs:complexType>                        
+                      <xs:complexType>
+                        <xs:attribute name="UID" type="xs:integer"/>
                         <xs:attribute name="base64Data" type="xs:base64Binary"/>
                       </xs:complexType>
                     </xs:element>
@@ -24,6 +25,7 @@
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
+            <xs:attribute name="UID" type="xs:string" use="required" />
             <xs:attribute name="title" type="xs:string" use="required" />
             <xs:attribute name="phone" type="xs:integer" use="required" />
             <xs:attribute name="body" type="xs:string" use="required" />

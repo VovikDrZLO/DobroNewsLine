@@ -18,6 +18,8 @@ namespace DobroNewsLine
     /// <summary>
     /// Логика взаимодействия для NewsLineItemWindow.xaml
     /// </summary>
+    /// 
+
     public partial class NewsLineItemWindow : Window
     {
         private int PictsMaxCount = 0;
@@ -30,17 +32,11 @@ namespace DobroNewsLine
         public NewsLineItemWindow(NewsItem newsItem)
         {
             InitializeComponent();
-            //CurrTitle = newsItem.Title;
-            //TitleTextBox.Text = newsItem.Title;  
-             //BodyTextBlock.Text = newsItem.Body;
-            //PhoneTextControl.Text = newsItem.Phone;
-            //CityRegionTextBlock.Text = newsItem.CityRegion;
-
-            //TitleTextBox.DataContext = newsItem;
-            //PhoneTextControl.DataContext = newsItem;
-            //CityRegionTextBlock.DataContext = newsItem;
-            //PriceTextBlock.DataContext = newsItem;
-            //BodyTextBlock.DataContext = newsItem;
+            TitleTextBox.DataContext = newsItem;
+            PhoneTextControl.DataContext = newsItem;
+            CityRegionTextBlock.DataContext = newsItem;
+            PriceTextBlock.DataContext = newsItem;
+            BodyTextBlock.DataContext = newsItem;
            
             PictsMaxCount = newsItem.PictList.Count;
             CurrentNewsItem = newsItem;

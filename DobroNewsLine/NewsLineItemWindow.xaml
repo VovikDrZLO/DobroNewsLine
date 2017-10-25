@@ -1,11 +1,8 @@
 ﻿<Window x:Class="DobroNewsLine.NewsLineItemWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:DobroNewsLine"
+        xmlns:local="clr-namespace:DobroNewsLine"        
         Title="NewsLineItemWindow" Height="482.1" Width="916">    
-        <Window.DataContext>
-        <local:NewsItem/>
-        </Window.DataContext>
     <Grid>
         <TextBlock x:Name="BodyTextBlock" HorizontalAlignment="Left" Height="292" Margin="10,114,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="410" Text="{Binding Path=Body}"/>
         <TextBox x:Name="TitleTextBox" HorizontalAlignment="Left" Height="26" Margin="59,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="361" Text="{Binding Path=Title}"/>

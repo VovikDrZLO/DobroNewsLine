@@ -226,7 +226,8 @@ namespace DobroNewsLine
         public IList<NewsItem> GetNewsItemFromXML()
         {
             XDocument myXDocument = new XDocument();
-            myXDocument = XDocument.Load(@"C:\Users\cons_inspiron\Documents\Visual Studio 2012\Projects\DobroNewsLine\DobroNewsLine\DobroNewsLine.xml"); 
+            string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
+            myXDocument = XDocument.Load(DataFilePath); 
             //IEnumerable<XElement> NewsList = myXDocument.Root.XPathSelectElements("//prefix:DobroNewsLine/prefix:advert");            
             var NewsList = myXDocument.XPathSelectElements("//DobroNewsLine/advert");
             IList<NewsItem> NewsItemsList = new List<NewsItem>();
@@ -256,7 +257,8 @@ namespace DobroNewsLine
         {
             get
             {
-                XDocument XMLDoc = XDocument.Load(@"C:\Users\cons_inspiron\Documents\Visual Studio 2012\Projects\DobroNewsLine\DobroNewsLine\DobroNewsLine.xml");
+                string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
+                XDocument XMLDoc = XDocument.Load(DataFilePath);
                 return XMLDoc;
             }
         }

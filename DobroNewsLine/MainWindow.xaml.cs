@@ -102,7 +102,8 @@ namespace DobroNewsLine
         {
             get
             {
-                XDocument XMLDoc = XDocument.Load(@"C:\Users\cons_inspiron\Documents\Visual Studio 2012\Projects\DobroNewsLine\DobroNewsLine\DobroNewsLine.xml");
+                string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
+                XDocument XMLDoc = XDocument.Load(DataFilePath);
                 return XMLDoc;
             }
         }
@@ -188,7 +189,8 @@ namespace DobroNewsLine
 
             XDocument AdvXML = XMLUtils.SettingsXMLDoc;
             AdvXML.Root.RemoveAll();
-            AdvXML.Save(@"C:\Users\Volodimir\Documents\Visual Studio 2013\Projects\DobroNewsLine\DobroNewsLine\DobroNewsLine.xml");
+            string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
+            AdvXML.Save(DataFilePath);
 
         }
 

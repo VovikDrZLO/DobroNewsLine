@@ -13,7 +13,8 @@ namespace DobroNewsLine
         {
             get
             {
-                XDocument XMLDoc = XDocument.Load(@"C:\Users\Volodimir\Documents\Visual Studio 2013\Projects\DobroNewsLine\DobroNewsLine\DobroNewsLine.xml");
+                string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
+                XDocument XMLDoc = XDocument.Load(DataFilePath);
                 return XMLDoc;
             }
         }
@@ -62,7 +63,8 @@ namespace DobroNewsLine
             //{
                 //MergeXElements(AdvertItem, CurrentDoc);
             //}
-            CurrentDoc.Save(@"C:\Users\Volodimir\Documents\Visual Studio 2013\Projects\DobroNewsLine\DobroNewsLine\DobroNewsLine.xml");
+            string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
+            CurrentDoc.Save(DataFilePath);
         }
 
         public static XElement CreateAdverItemXElement(NewsItem AdvertItem)
@@ -122,6 +124,28 @@ namespace DobroNewsLine
                                                  select el);
             ICollection<XElement> AdvertLinesCollection = AdvertLines.ToList();
             return AdvertLinesCollection.Count == 0;
+        }
+
+        public static Dictionary<int, string> GetAllTegsCollection()
+        {
+            Dictionary<int, string> TagDict = new Dictionary<int, string>();
+            XDocument settingsXMLDoc = SettingsXMLDoc;
+            IEnumerable<XElement> TegsIEnum = (from el in settingsXMLDoc.Root.Element("TegList").Elements("Teg")
+                                               select el);
+            ICollection<XElement> TegsCollection = TegsIEnum.ToList();
+
+            foreach (XElement TegElem in TegsCollection)
+            {
+                int TegUID = Convert.ToInt16(TegElem.Attribute("UID").Value);
+                string TegName = TegElem.Attribute("Name").Value;
+                TagDict.Add(TegUID, TegName);
+            }
+
+            return TagDict;
+        }
+        public static void SaveNewList(NewsItem newsItem)
+        {
+
         }
     }
 }
