@@ -16,11 +16,11 @@
                                                  ContentBinding="{Binding Source={StaticResource edit}}" TargetName="{Binding Link}" Width="75">
                             <DataGridHyperlinkColumn.ElementStyle>
                                 <Style>
-                                    <EventSetter Event="Hyperlink.Click" Handler="MyClick"/>                                
+                                    <EventSetter Event="Hyperlink.Click" Handler="MyClick"/>
                                 </Style>
                             </DataGridHyperlinkColumn.ElementStyle>
-                        </DataGridHyperlinkColumn> 
-                    
+                        </DataGridHyperlinkColumn>
+
                         <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="100"/>
                         <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="100"/>
                         <DataGridTextColumn Header="City" Binding="{Binding CityRegion}" Width="100"/>
@@ -33,7 +33,7 @@
             <Button Content="X" Canvas.Left="267" Canvas.Top="10" Width="19" Click="ClearFilter_Click"/>
             <Button Content="Import" Canvas.Left="621" Canvas.Top="10" Width="56" Click="OpenImportWnd_Click"/>
             <Button Content="ClearData" Canvas.Left="541" Canvas.Top="10" Width="75"  Click="ClearData_Click"/>
-            <Button x:Name="TegManageButton" Content="TegManage" Canvas.Left="520" Canvas.Top="10" Width="75" Click="TegManageButton_Click"/>
+            <Button x:Name="TegManageButton" Content="TegManage" Canvas.Left="449" Canvas.Top="10" Width="74" Click="TegManageButton_Click"/>
         </Canvas>
     </Grid>
 </Window>

@@ -74,7 +74,16 @@ namespace DobroNewsLine
         public void AddPageData(NewsItem newsItem)
         { 
             Uri uri = newsItem.Link;
-            string html = new WebClient().DownloadString(uri);
+            string html;
+            try
+            {
+                html = new WebClient().DownloadString(uri);
+            }
+            catch (WebException e)
+            {
+                return;
+            }
+
             var parser = new HtmlParser();
             var document = parser.Parse(html);
             string slyleF = "width: 90%; margin-top: 19px; margin-left: auto; margin-right: auto; padding-top: 10px; text-align: left;";
@@ -97,8 +106,6 @@ namespace DobroNewsLine
                                 newsItem.PictList = new List<string>();
                             }
                             newsItem.PictList.Add(ImgBase64String);
-                            //XElement ImgElement = new XElement("Pict", new XAttribute("base64Data", ImgBase64String));                            
-                            //NewsXElement.Add(ImgElement);
                         }
                     }
                 }

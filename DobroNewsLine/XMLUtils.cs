@@ -31,23 +31,24 @@ namespace DobroNewsLine
                     return;
                 }
             }            
-            XElement Pictlement = new XElement("Pict",
-                new XAttribute("base64Data", PictBase64String)
-            );
-            CurrentElement.Add(Pictlement);            
+            //XElement Pictlement = new XElement("Pict",
+              //  new XAttribute("base64Data", PictBase64String)
+            //);
+            //CurrentElement.Add(Pictlement);            
+            AddPictToElement(PictBase64String, CurrentElement);        
         }
 
-        public static void MergeXElements(NewsItem AdvertItem, XDocument CurrentDoc)
+        public static void MergeXElements(NewsItem NewItem, XDocument CurrentDoc)
         {
-            string Phone = AdvertItem.Phone;
-            XElement AdvertLines = (from el in CurrentDoc.Root.Elements("advert")
+            string Phone = NewItem.Phone;
+            XElement OldItem = (from el in CurrentDoc.Root.Elements("advert")
                                     where (string)el.Attribute("phone") == Phone
                                     select el).Single<XElement>();
-            if (AdvertItem.PictList != null)
+            if (NewItem.PictList != null)
             {
-                foreach (string PictBase64String in AdvertItem.PictList)
+                foreach (string PictBase64String in NewItem.PictList)
                 {
-                    PictInAdvert(PictBase64String, AdvertLines);
+                    PictInAdvert(PictBase64String, OldItem);
                 }
             }
         }
@@ -55,14 +56,14 @@ namespace DobroNewsLine
         public static void SaveAdvertData(NewsItem AdvertItem)
         {
             XDocument CurrentDoc = SettingsXMLDoc;
-            //if (IsNewRecord(AdvertItem))
-            //{
+            if (IsNewRecord(AdvertItem))
+            {
                 CurrentDoc.Root.Add(CreateAdverItemXElement(AdvertItem));
-            //}
-            //else
-            //{
-                //MergeXElements(AdvertItem, CurrentDoc);
-            //}
+            }
+            else
+            {
+                MergeXElements(AdvertItem, CurrentDoc);
+            }
             string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
             CurrentDoc.Save(DataFilePath);
         }
@@ -70,8 +71,10 @@ namespace DobroNewsLine
         public static XElement CreateAdverItemXElement(NewsItem AdvertItem)
         {
             XElement AdvertItemXElement = new XElement("advert");
+            AddAttribute(AdvertItemXElement, "UID",  Guid.NewGuid().ToString());
             AddAttribute(AdvertItemXElement, "title", AdvertItem.Title);
             AddAttribute(AdvertItemXElement, "link", AdvertItem.Link.ToString());
+            AddAttribute(AdvertItemXElement, "price", AdvertItem.Price.ToString());                                    
             if (AdvertItem.Body != null)
             {
                 AddAttribute(AdvertItemXElement, "body", AdvertItem.Body);
@@ -99,15 +102,38 @@ namespace DobroNewsLine
 
             if (AdvertItem.PictList != null)
             {
+                int PictCnt = 1;
                 foreach (string PictStr in AdvertItem.PictList)
                 {
-                    XElement PictlEment = new XElement("Pict",
+                    /*XElement PictlEment = new XElement("Pict",
                             new XAttribute("base64Data", PictStr)
                         );
-                    AdvertItemXElement.Add(PictlEment);
+                    AdvertItemXElement.Add(PictlEment);*/
+                    AddPictToElement(PictStr, AdvertItemXElement, PictCnt);
+                    PictCnt++;
                 }
+                AddAttribute(AdvertItemXElement, "lastPictId", PictCnt.ToString());
+            }
+            else
+            {
+                AddAttribute(AdvertItemXElement, "lastPictId", "0");
             }
             return AdvertItemXElement;
+        }
+
+        private static void AddPictToElement(string PictStr, XElement NewsItemXElement, int PictCnt)
+        {
+            XElement PictlEment = new XElement("Pict", new XAttribute("UID", PictCnt), new XAttribute("base64Data", PictStr));
+            NewsItemXElement.Add(PictlEment);
+        }
+
+        private static void AddPictToElement(string PictStr, XElement NewsItemXElement)
+        {
+            string PictCnt = NewsItemXElement.Attribute("lastPictId").Value;
+            int PictCntInt = Convert.ToInt16(PictCnt);
+            XElement PictlEment = new XElement("Pict", new XAttribute("UID", PictCntInt++), new XAttribute("base64Data", PictStr));            
+            NewsItemXElement.Add(PictlEment);
+            NewsItemXElement.SetAttributeValue("lastPictId", PictCntInt);
         }
 
         private static void AddAttribute(XElement XMLElement, string AttributeName, string AttributeValue)
@@ -119,6 +145,7 @@ namespace DobroNewsLine
         public static bool IsNewRecord(NewsItem AdvertItem)
         {
             string Phone = AdvertItem.Phone;
+            if (string.IsNullOrEmpty(Phone)) return true;
             IEnumerable<XElement> AdvertLines = (from el in SettingsXMLDoc.Root.Elements("advert")
                                                  where (string)el.Attribute("phone") == Phone
                                                  select el);
@@ -145,7 +172,31 @@ namespace DobroNewsLine
         }
         public static void SaveNewList(NewsItem newsItem)
         {
-
+            XDocument CurrentDoc = SettingsXMLDoc;
+            XElement CurrElement = CreateAdverItemXElement(newsItem);
+            Guid Uid = newsItem.UID;
+            if (Uid == Guid.Empty)
+            {
+                CurrElement = CreateAdverItemXElement(newsItem);
+                CurrentDoc.Add(CurrElement);
+            }
+            else
+            {                
+                XElement UpdatedItem = (from el in CurrentDoc.Root.Elements("advert")
+                                        where (string)el.Attribute("UID") == Uid.ToString()
+                                    select el).Single<XElement>();
+                if (UpdatedItem != null)
+                {
+                    UpdatedItem.ReplaceAll(CurrElement);
+                }
+                else
+                {
+                    CurrElement = CreateAdverItemXElement(newsItem);
+                    CurrentDoc.Add(CurrElement);
+                }
+            }
+            string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
+            CurrentDoc.Save(DataFilePath);
         }
     }
 }

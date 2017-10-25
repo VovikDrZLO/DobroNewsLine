@@ -24,6 +24,7 @@ namespace DobroNewsLine
     {
         private int PictsMaxCount = 0;
         private int PictsCurrentindex = -1;
+        private int PictsCurrentUID = 0;
         public NewsItem CurrentNewsItem {get; set;}   
         public NewsLineItemWindow()
         {
@@ -94,6 +95,11 @@ namespace DobroNewsLine
                 PrevButtom.Visibility = System.Windows.Visibility.Hidden;
             }
 
+        }
+
+        private void SaveBtn_Click(object sender, RoutedEventArgs e)
+        {
+            XMLUtils.SaveNewList(CurrentNewsItem);
         }
 
     }

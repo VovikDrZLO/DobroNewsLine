@@ -27,7 +27,8 @@
             </xs:sequence>
             <xs:attribute name="UID" type="xs:string" use="required" />
             <xs:attribute name="title" type="xs:string" use="required" />
-            <xs:attribute name="phone" type="xs:integer" use="required" />
+            <xs:attribute name="phone" type="xs:string" use="required" />
+            <xs:attribute name="lastPictId" type="xs:integer" use="optional" />
             <xs:attribute name="body" type="xs:string" use="required" />
             <xs:attribute name="link" type="xs:string" use="optional" />
             <xs:attribute name="date" type="xs:string" use="required" />

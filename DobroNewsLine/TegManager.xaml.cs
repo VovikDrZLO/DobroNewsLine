@@ -162,7 +162,7 @@ namespace DobroNewsLine
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            XMLUtils.SaveNewList(CurrNewsItem);
+            //XMLUtils.SaveNewList(CurrNewsItem);
         }        
     }
 }

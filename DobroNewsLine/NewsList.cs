@@ -53,13 +53,14 @@ namespace DobroNewsLine
                                         }
                                     }
                                     NewsClass.Body = reader.GetAttribute("body");
-                                    //NewsClass.UID = new Guid(reader.GetAttribute("UID"));
+                                    NewsClass.UID = new Guid(reader.GetAttribute("UID"));
                                     NewsClass.Title = reader.GetAttribute("title");
                                     NewsClass.Phone = reader.GetAttribute("phone");
                                     NewsClass.Link = new Uri(reader.GetAttribute("link"));
                                     NewsClass.Date = reader.GetAttribute("date");
                                     NewsClass.CityRegion = reader.GetAttribute("cityRegion");
                                     NewsClass.Age = reader.GetAttribute("age");
+                                    NewsClass.Price = Convert.ToDecimal(reader.GetAttribute("price"));
                                     string UIds = reader.GetAttribute("TegCollection");
 
                                     NewsClass.PictList = PictList;

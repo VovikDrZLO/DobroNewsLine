@@ -15,6 +15,7 @@
         <Label Content="Price" HorizontalAlignment="Left" Margin="241,41,0,0" VerticalAlignment="Top" Width="40"/>
         <Image x:Name="AdvImage" HorizontalAlignment="Left" Height="396" Margin="452,10,0,0" VerticalAlignment="Top" Width="446"/>
         <Button x:Name="PrevButtom" Content="Prew" HorizontalAlignment="Left" Margin="452,411,0,0" VerticalAlignment="Top" Width="75" Click="PrevButtom_Click" Visibility="Hidden"/>
-        <Button x:Name="NextButton" Content="Next" HorizontalAlignment="Left" Margin="546,411,0,0" VerticalAlignment="Top" Width="75" Click="NextButton_Click" Visibility="Hidden"/>      
+        <Button x:Name="NextButton" Content="Next" HorizontalAlignment="Left" Margin="546,411,0,0" VerticalAlignment="Top" Width="75" Click="NextButton_Click" Visibility="Hidden"/>
+        <Button Content="Save" HorizontalAlignment="Left" Margin="797,411,0,0" VerticalAlignment="Top" Width="75" Click="SaveBtn_Click"/>
     </Grid>
 </Window>
