@@ -71,7 +71,14 @@ namespace DobroNewsLine
         public static XElement CreateAdverItemXElement(NewsItem AdvertItem)
         {
             XElement AdvertItemXElement = new XElement("advert");
-            AddAttribute(AdvertItemXElement, "UID",  Guid.NewGuid().ToString());
+            if (AdvertItem.UID == Guid.Empty)
+            { 
+                AddAttribute(AdvertItemXElement, "UID",  Guid.NewGuid().ToString());
+            }
+            else
+            {
+                AddAttribute(AdvertItemXElement, "UID", AdvertItem.UID.ToString());
+            }
             AddAttribute(AdvertItemXElement, "title", AdvertItem.Title);
             AddAttribute(AdvertItemXElement, "link", AdvertItem.Link.ToString());
             AddAttribute(AdvertItemXElement, "price", AdvertItem.Price.ToString());                                    
@@ -105,10 +112,6 @@ namespace DobroNewsLine
                 int PictCnt = 1;
                 foreach (string PictStr in AdvertItem.PictList)
                 {
-                    /*XElement PictlEment = new XElement("Pict",
-                            new XAttribute("base64Data", PictStr)
-                        );
-                    AdvertItemXElement.Add(PictlEment);*/
                     AddPictToElement(PictStr, AdvertItemXElement, PictCnt);
                     PictCnt++;
                 }
@@ -187,7 +190,7 @@ namespace DobroNewsLine
                                     select el).Single<XElement>();
                 if (UpdatedItem != null)
                 {
-                    UpdatedItem.ReplaceAll(CurrElement);
+                    UpdatedItem.ReplaceWith(CurrElement);
                 }
                 else
                 {
@@ -197,6 +200,7 @@ namespace DobroNewsLine
             }
             string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
             CurrentDoc.Save(DataFilePath);
+            CurrentDoc = null;
         }
     }
 }

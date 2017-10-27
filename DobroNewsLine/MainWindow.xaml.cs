@@ -26,8 +26,8 @@ namespace DobroNewsLine
 {
     //TODO
     //1. Import photo merge +
-    //2. Photo delete
-    //3. Notes + fields edit
+    //2. Photo delete + 
+    //3. Fields edit +
     //4. NewsItems delete
     //5. Teg filtration
     //6. Import whith filtration
@@ -35,6 +35,8 @@ namespace DobroNewsLine
     //8. Main Pict in grid
     //9. Get CategotyId List
     //10. Reload main grid
+    //11. Notes
+    //12. LastImageDeleteBug
     public partial class MainWindow : Window
     {
         public MainWindow()

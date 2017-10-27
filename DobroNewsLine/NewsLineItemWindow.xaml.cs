@@ -23,8 +23,7 @@ namespace DobroNewsLine
     public partial class NewsLineItemWindow : Window
     {
         private int PictsMaxCount = 0;
-        private int PictsCurrentindex = -1;
-        private int PictsCurrentUID = 0;
+        private int PictsCurrentindex = -1;        
         public NewsItem CurrentNewsItem {get; set;}   
         public NewsLineItemWindow()
         {
@@ -43,7 +42,7 @@ namespace DobroNewsLine
             CurrentNewsItem = newsItem;
             if (newsItem.PictList.Count > 0)
             {
-                PictsCurrentindex = 0;
+                PictsCurrentindex = 0;                
                 SetPrevNextButtonsVisibility();
                 BitmapImage bi = GetBIByIndex(PictsCurrentindex);
                 AdvImage.Source = bi;
@@ -51,7 +50,7 @@ namespace DobroNewsLine
         }
 
         private BitmapImage GetBIByIndex(int Index )
-        {
+        {            
             byte[] binaryData = Convert.FromBase64String(CurrentNewsItem.PictList[Index]);
             BitmapImage bi = new BitmapImage();
             bi.BeginInit();
@@ -60,7 +59,18 @@ namespace DobroNewsLine
             return bi;
         }
 
+        private void DeleteImageByIndex(int Index)
+        {
+            CurrentNewsItem.PictList.RemoveAt(Index);
+            PictsMaxCount--;
+        }
+
         private void PrevButtom_Click(object sender, RoutedEventArgs e)
+        {
+            ShowPrevImage();
+        }
+
+        private void ShowPrevImage()
         {
             PictsCurrentindex--;
             BitmapImage bi = GetBIByIndex(PictsCurrentindex);
@@ -69,6 +79,11 @@ namespace DobroNewsLine
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            ShowNextImage();
+        }
+
+        private void ShowNextImage()
         {
             PictsCurrentindex++;
             BitmapImage bi = GetBIByIndex(PictsCurrentindex);
@@ -100,6 +115,27 @@ namespace DobroNewsLine
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
             XMLUtils.SaveNewList(CurrentNewsItem);
+            this.Close();
+        }
+
+        private void DelImgBtn_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteImageByIndex(PictsCurrentindex);
+            if (PictsCurrentindex > 0)
+            {
+                PictsCurrentindex++;
+                ShowPrevImage();                
+            }
+            else if (PictsCurrentindex == 0 && PictsMaxCount > 0)
+            {
+                PictsCurrentindex--;
+                ShowNextImage();
+            }
+            else
+            {
+                AdvImage.Source = null;
+            }
+            SetPrevNextButtonsVisibility();
         }
 
     }
