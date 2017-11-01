@@ -18,5 +18,6 @@
         <Button x:Name="NextButton" Content="Next" HorizontalAlignment="Left" Margin="546,411,0,0" VerticalAlignment="Top" Width="75" Click="NextButton_Click" Visibility="Hidden"/>
         <Button Content="Save" HorizontalAlignment="Left" Margin="797,411,0,0" VerticalAlignment="Top" Width="75" Click="SaveBtn_Click"/>
         <Button Content="Del Img" HorizontalAlignment="Left" Margin="715,411,0,0" VerticalAlignment="Top" Width="75" Click="DelImgBtn_Click"/>
+        <CheckBox x:Name="DefPictCB" Content="Default pict" HorizontalAlignment="Left" Margin="621,411,0,0" VerticalAlignment="Top" Width="94" Checked="DefPictCB_Checked"/>
     </Grid>
 </Window>

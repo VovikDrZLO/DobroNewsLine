@@ -32,11 +32,12 @@ namespace DobroNewsLine
     //5. Teg filtration
     //6. Import whith filtration
     //7. Import Counter
-    //8. Main Pict in grid
-    //9. Get CategotyId List
-    //10. Reload main grid
+    //8. Main Pict in grid +
+    //9. Get CategotyId List +
+    //10. Reload main grid +
     //11. Notes
     //12. LastImageDeleteBug
+    //13. LoadAllPictsInEditPage
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -49,9 +50,7 @@ namespace DobroNewsLine
             list.Add("Body");
             SearchColumnComboBox.ItemsSource = list;
             MainGridData.DataContext = new NewsList();           
-        }                 
-
-
+        }
         public bool ValidateXML(string XMLDoc) //Valid
         {
             XmlDocument ValidDoc = new XmlDocument();
@@ -189,12 +188,11 @@ namespace DobroNewsLine
 
         private void ClearData_Click(object sender, RoutedEventArgs e)
         {
-
             XDocument AdvXML = XMLUtils.SettingsXMLDoc;
             AdvXML.Root.RemoveAll();
             string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
             AdvXML.Save(DataFilePath);
-
+            ReloadMainGrid();
         }
 
         private void MainGridData_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -215,6 +213,16 @@ namespace DobroNewsLine
                 tegManagerWindow.ShowDialog();
             }           
 
+        }
+
+        private void ReloadBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ReloadMainGrid();
+        }
+
+        public void ReloadMainGrid()
+        {
+            MainGridData.DataContext = new NewsList();
         }
     }
 }

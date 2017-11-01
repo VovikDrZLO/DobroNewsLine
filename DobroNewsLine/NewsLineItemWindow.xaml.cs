@@ -51,7 +51,7 @@ namespace DobroNewsLine
 
         private BitmapImage GetBIByIndex(int Index )
         {            
-            byte[] binaryData = Convert.FromBase64String(CurrentNewsItem.PictList[Index]);
+            byte[] binaryData = Convert.FromBase64String(CurrentNewsItem.PictList[Index].Base64Data);
             BitmapImage bi = new BitmapImage();
             bi.BeginInit();
             bi.StreamSource = new MemoryStream(binaryData);
@@ -109,7 +109,7 @@ namespace DobroNewsLine
             {
                 PrevButtom.Visibility = System.Windows.Visibility.Hidden;
             }
-
+            DefPictCB.IsChecked = CurrentNewsItem.PictList[PictsCurrentindex].UID == CurrentNewsItem.DefPictId;
         }
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
@@ -136,6 +136,18 @@ namespace DobroNewsLine
                 AdvImage.Source = null;
             }
             SetPrevNextButtonsVisibility();
+        }
+        private void DefPictCB_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox CBControl = sender as CheckBox;
+            bool IsChecked = Convert.ToBoolean(CBControl.IsChecked);
+            if (IsChecked)
+            {
+                PictObj CurrPictObj = CurrentNewsItem.PictList[PictsCurrentindex];
+                CurrentNewsItem.DefPictId = CurrPictObj.UID;
+            }
+            
+            
         }
 
     }

@@ -2,18 +2,26 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="Dobro News Line" Height="550" Width="725">
-    <Grid Margin="0,0,0,0">
+        Title="Dobro News Line" Height="550" Width="800">
+
+    <Grid Margin="0,0,0,0">              
         <Canvas Margin="10" x:Name="MainCanvas">
             <Grid Canvas.Top="40" Height="Auto" MaxHeight="435" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="687">
-                <DataGrid x:Name="MainGridData" AutoGenerateColumns ="False" CanUserAddRows="False" ItemsSource="{Binding NewsItems}" MouseDoubleClick="MainGridData_MouseDoubleClick" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,0,27,0">
+                <DataGrid x:Name="MainGridData" AutoGenerateColumns ="False" CanUserAddRows="False" ItemsSource="{Binding NewsItems}" MouseDoubleClick="MainGridData_MouseDoubleClick" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,0,-64,0">
                     <DataGrid.Resources>
                         <sys:String x:Key="edit">Open</sys:String>
                     </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="260"/>
+                        <DataGridTemplateColumn Header="Pict" Width="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image Source="{Binding DefPict}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="300"/>
                         <DataGridHyperlinkColumn Header="Link" Binding="{Binding Link}" 
-                                                 ContentBinding="{Binding Source={StaticResource edit}}" TargetName="{Binding Link}" Width="75">
+                                                 ContentBinding="{Binding Source={StaticResource edit}}" TargetName="{Binding Link}" Width="50">
                             <DataGridHyperlinkColumn.ElementStyle>
                                 <Style>
                                     <EventSetter Event="Hyperlink.Click" Handler="MyClick"/>
@@ -21,19 +29,22 @@
                             </DataGridHyperlinkColumn.ElementStyle>
                         </DataGridHyperlinkColumn>
 
-                        <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="100"/>
-                        <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="100"/>
-                        <DataGridTextColumn Header="City" Binding="{Binding CityRegion}" Width="100"/>
+                        <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="90"/>
+                        <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="75"/>
+                        <DataGridTextColumn Header="City" Binding="{Binding CityRegion}" Width="105"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
-            <Button Content="Seach" Canvas.Left="337" Canvas.Top="10" Width="75" Click="SearchBtn_Click" Height="20"/>
+            <Button Content="Seach" Canvas.Left="360" Canvas.Top="10" Width="75" Click="SearchBtn_Click" Height="20"/>
             <ComboBox x:Name="SearchColumnComboBox" Canvas.Left="10" Canvas.Top="10" Width="120" Height="20"/>
             <TextBox Height="20" x:Name="FilterValueTextBox" Canvas.Left="147" TextWrapping="Wrap" Canvas.Top="10" Width="120"/>
             <Button Content="X" Canvas.Left="267" Canvas.Top="10" Width="19" Click="ClearFilter_Click"/>
             <Button Content="Import" Canvas.Left="621" Canvas.Top="10" Width="56" Click="OpenImportWnd_Click"/>
             <Button Content="ClearData" Canvas.Left="541" Canvas.Top="10" Width="75"  Click="ClearData_Click"/>
             <Button x:Name="TegManageButton" Content="TegManage" Canvas.Left="449" Canvas.Top="10" Width="74" Click="TegManageButton_Click"/>
+            <Button Height="20" Canvas.Left="308" Canvas.Top="10" Width="20" Click="ReloadBtn_Click">
+                <Image Source="Reload.png" Width="17" Height="18"/>
+            </Button>
         </Canvas>
     </Grid>
 </Window>

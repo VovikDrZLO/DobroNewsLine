@@ -46,9 +46,9 @@ namespace DobroNewsLine
                                     select el).Single<XElement>();
             if (NewItem.PictList != null)
             {
-                foreach (string PictBase64String in NewItem.PictList)
+                foreach (PictObj CurrPictObj in NewItem.PictList)
                 {
-                    PictInAdvert(PictBase64String, OldItem);
+                    PictInAdvert(CurrPictObj.Base64Data, OldItem);
                 }
             }
         }
@@ -106,13 +106,17 @@ namespace DobroNewsLine
             {
                 AddAttribute(AdvertItemXElement, "phone", AdvertItem.Phone);
             }
+            if (AdvertItem.DefPictId != 0)
+            {
+                AddAttribute(AdvertItemXElement, "defPictId", AdvertItem.DefPictId.ToString());
+            }
 
             if (AdvertItem.PictList != null)
             {
                 int PictCnt = 1;
-                foreach (string PictStr in AdvertItem.PictList)
+                foreach (PictObj CurrPictObj in AdvertItem.PictList)
                 {
-                    AddPictToElement(PictStr, AdvertItemXElement, PictCnt);
+                    AddPictToElement(CurrPictObj.Base64Data, AdvertItemXElement, PictCnt);
                     PictCnt++;
                 }
                 AddAttribute(AdvertItemXElement, "lastPictId", PictCnt.ToString());
