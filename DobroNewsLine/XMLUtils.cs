@@ -7,15 +7,20 @@ using System.Xml.Linq;
 
 namespace DobroNewsLine
 {
+    enum StatusType{Starting, Importing, Finish }
     static class XMLUtils
     {
+        private static XDocument _settingsXMLDoc { get; set; }
         public static XDocument SettingsXMLDoc //valid
         {
             get
-            {
-                string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
-                XDocument XMLDoc = XDocument.Load(DataFilePath);
-                return XMLDoc;
+            {                
+                if (_settingsXMLDoc == null)
+                {
+                    string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
+                    _settingsXMLDoc = XDocument.Load(DataFilePath);
+                }
+                return _settingsXMLDoc;
             }
         }
 
@@ -56,13 +61,31 @@ namespace DobroNewsLine
         public static void SaveAdvertData(NewsItem AdvertItem)
         {
             XDocument CurrentDoc = SettingsXMLDoc;
-            if (IsNewRecord(AdvertItem))
+            if (IsNewRecord(AdvertItem, CurrentDoc))
             {
                 CurrentDoc.Root.Add(CreateAdverItemXElement(AdvertItem));
             }
             else
             {
                 MergeXElements(AdvertItem, CurrentDoc);
+            }
+            string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
+            CurrentDoc.Save(DataFilePath);
+        }
+
+        public static void SaveAdvertData(List<NewsItem> AdvertItemList)
+        {
+            XDocument CurrentDoc = SettingsXMLDoc;
+            foreach (NewsItem AdvertItem in AdvertItemList)
+            {
+                if (IsNewRecord(AdvertItem, CurrentDoc))
+                {
+                    CurrentDoc.Root.Add(CreateAdverItemXElement(AdvertItem));
+                }
+                else
+                {
+                    MergeXElements(AdvertItem, CurrentDoc);
+                }
             }
             string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
             CurrentDoc.Save(DataFilePath);
@@ -149,11 +172,11 @@ namespace DobroNewsLine
             XMLElement.Add(attribute);
         }
 
-        public static bool IsNewRecord(NewsItem AdvertItem)
+        public static bool IsNewRecord(NewsItem AdvertItem, XDocument CurrentSettingsXMLDoc)
         {
             string Phone = AdvertItem.Phone;
             if (string.IsNullOrEmpty(Phone)) return true;
-            IEnumerable<XElement> AdvertLines = (from el in SettingsXMLDoc.Root.Elements("advert")
+            IEnumerable<XElement> AdvertLines = (from el in CurrentSettingsXMLDoc.Root.Elements("advert")
                                                  where (string)el.Attribute("phone") == Phone
                                                  select el);
             ICollection<XElement> AdvertLinesCollection = AdvertLines.ToList();

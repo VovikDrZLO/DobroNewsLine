@@ -45,7 +45,7 @@ namespace DobroNewsLine
             {
                 CityName = "kiev";
             }
-            ParthingSite(SubsectionId, PagesCount, CityName);
+            Task.Run(() => ParthingSite(SubsectionId, PagesCount, CityName));            
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
@@ -78,46 +78,39 @@ namespace DobroNewsLine
                     //CategoryItem.Code = Convert.ToInt16(FullLink.Replace("http://ukrgo.ua/view_subsection.php?id_subsection=", ""));
                     //CategoryList.Add(CategoryItem);                    
                 }
-            }            
-            /*var subDocument = parser.Parse(mainСontentList.InnerHtml);
-            var TablsList = subDocument.All.Where(m => m.LocalName == "table");
-            XDocument NewsLineX = XMLUtils.SettingsXMLDoc; //XDocument.Load(@"C:\Users\cons_inspiron\Documents\Visual Studio 2012\Projects\DobroNewsLine\DobroNewsLine\DobroNewsLine.xml");
-            foreach (IHtmlTableElement tab in TablsList)
-            {
-                NewsItem newsItem = new NewsItem();
-                string Title = tab.Rows[0].Cells[0].InnerHtml;
-                var InnerDoc = parser.Parse(Title);
-                newsItem.Link = new Uri(InnerDoc.QuerySelector("a").Attributes[0].Value);
-                newsItem.Title = InnerDoc.QuerySelector("img").Attributes[0].Value;
-                AddPageData(newsItem);
-                XMLUtils.SaveAdvertData(newsItem);
-            } */               
-
+            }
         }
 
-        public void ParthingSite(string SubsectionId, string PagesCount, string CityName)
+        public async Task ParthingSite(string SubsectionId, string PagesCount, string CityName)
         {
+            int Counter = 0;
+            int TotalCount = Convert.ToInt16(PagesCount) * 50;
+            UpdateWindow("Import Starts", StatusType.Starting);
+            List<NewsItem> NewsItemList = new List<NewsItem>();
             for (int cnt = 1; cnt <= Convert.ToInt16(PagesCount); cnt++)
-            {
+            {                
                 Uri uri = new Uri("http://" + CityName + ".ukrgo.com/view_subsection.php?id_subsection=" + SubsectionId + "&search=&page=" + cnt);
                 string html = new WebClient().DownloadString(uri);
                 var parser = new HtmlParser();
                 var document = parser.Parse(html);
                 var mainСontentList = document.All.Where(m => m.LocalName == "div" && m.ClassList.Contains("main-content")).Single();
                 var subDocument = parser.Parse(mainСontentList.InnerHtml);
-                var TablsList = subDocument.All.Where(m => m.LocalName == "table");
-                XDocument NewsLineX = XMLUtils.SettingsXMLDoc; //XDocument.Load(@"C:\Users\cons_inspiron\Documents\Visual Studio 2012\Projects\DobroNewsLine\DobroNewsLine\DobroNewsLine.xml");
+                var TablsList = subDocument.All.Where(m => m.LocalName == "table");                
                 foreach (IHtmlTableElement tab in TablsList)
-                {
+                {                    
                     NewsItem newsItem = new NewsItem();
                     string Title = tab.Rows[0].Cells[0].InnerHtml;
                     var InnerDoc = parser.Parse(Title);                   
                     newsItem.Link = new Uri(InnerDoc.QuerySelector("a").Attributes[0].Value);
                     newsItem.Title = InnerDoc.QuerySelector("img").Attributes[0].Value;                    
                     AddPageData(newsItem);
-                    XMLUtils.SaveAdvertData(newsItem);
+                    NewsItemList.Add(newsItem);
+                    Counter++;
+                    UpdateWindow("In progress " + Counter + "/" + TotalCount, StatusType.Importing);
                 }                
             }
+            XMLUtils.SaveAdvertData(NewsItemList);
+            UpdateWindow("Import Complite!!!", StatusType.Finish);
         }        
 
         public void AddPageData(NewsItem newsItem)
@@ -318,6 +311,26 @@ namespace DobroNewsLine
                 XDocument XMLDoc = XDocument.Load(DataFilePath);
                 return XMLDoc;
             }
+        }
+
+        void UpdateWindow(string Text, StatusType TextStatusType)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                StatusLB.Content = Text;
+                switch (TextStatusType)
+                {
+                    case  StatusType.Starting:
+                        StatusLB.Foreground = Brushes.Red;
+                        break;
+                    case StatusType.Importing:
+                        StatusLB.Foreground = Brushes.YellowGreen;
+                        break;
+                    case StatusType.Finish:
+                        StatusLB.Foreground = Brushes.Green;
+                        break;
+                }                
+            });
         }
     }
 }
