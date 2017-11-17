@@ -15,7 +15,10 @@
                         <DataGridTemplateColumn Header="Pict" Width="100">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Image Source="{Binding DefPict}" />
+                                    <Grid>
+                                        <Image Source="{Binding DefPict}" />
+                                        <Label Content="{Binding PictCount}" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="Red"/>
+                                    </Grid>                                    
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

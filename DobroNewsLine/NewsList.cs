@@ -51,8 +51,10 @@ namespace DobroNewsLine
                                     NewsClass.CityRegion = reader.GetAttribute("cityRegion");
                                     NewsClass.Age = reader.GetAttribute("age");
                                     NewsClass.Price = Convert.ToDecimal(reader.GetAttribute("price"));
+                                    NewsClass.IsFavorite = Convert.ToBoolean(Convert.ToInt16(reader.GetAttribute("IsFavorite")));
                                     string UIds = reader.GetAttribute("TegCollection");
                                     NewsClass.PictList = PictList;
+                                    NewsClass.PictCount = PictList.Count;
                                     if (!string.IsNullOrEmpty(UIds))
                                     {
                                         NewsClass.Tegs = UIds.Split(':');
@@ -139,6 +141,8 @@ namespace DobroNewsLine
         public decimal Price { get; set; }
         public BitmapImage DefPict { get; set; }
         public int DefPictId { get; set; }
+        public int PictCount { get; set; }
+        public bool IsFavorite { get; set; }
     }
 
     public class PictObj

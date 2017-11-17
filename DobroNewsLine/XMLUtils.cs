@@ -104,7 +104,8 @@ namespace DobroNewsLine
             }
             AddAttribute(AdvertItemXElement, "title", AdvertItem.Title);
             AddAttribute(AdvertItemXElement, "link", AdvertItem.Link.ToString());
-            AddAttribute(AdvertItemXElement, "price", AdvertItem.Price.ToString());                                    
+            AddAttribute(AdvertItemXElement, "price", AdvertItem.Price.ToString());
+            AddAttribute(AdvertItemXElement, "IsFavorite", AdvertItem.IsFavorite ? "1" : "0");
             if (AdvertItem.Body != null)
             {
                 AddAttribute(AdvertItemXElement, "body", AdvertItem.Body);

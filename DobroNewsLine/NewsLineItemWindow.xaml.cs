@@ -37,7 +37,7 @@ namespace DobroNewsLine
             CityRegionTextBlock.DataContext = newsItem;
             PriceTextBlock.DataContext = newsItem;
             BodyTextBlock.DataContext = newsItem;
-           
+            FavorCB.DataContext = newsItem;
             PictsMaxCount = newsItem.PictList.Count;
             CurrentNewsItem = newsItem;
             if (newsItem.PictList.Count > 0)

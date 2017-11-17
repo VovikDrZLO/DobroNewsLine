@@ -30,8 +30,7 @@ namespace DobroNewsLine
     //6. Import whith filtration    
     //11. Notes
     //12. LastImageDeleteBug
-    //13. LoadAllPictsInEditPage
-    //14. Pict counter
+    //13. LoadAllPictsInEditPage    
     //15. Age
     //16. Favorite
 
@@ -43,12 +42,14 @@ namespace DobroNewsLine
     //8. Main Pict in grid +
     //9. Get CategotyId List +
     //10. Reload main grid +
+    //14. Pict counter +
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
             ObservableCollection<string> list = new ObservableCollection<string>();
+            list.Add("Show favor");
             list.Add("Title");
             list.Add("Phone");
             list.Add("City");
@@ -126,7 +127,7 @@ namespace DobroNewsLine
             }
         }
         private void SearchBtn_Click(object sender, RoutedEventArgs e)
-        {
+        {            
             if (SearchColumnComboBox.SelectedItem == null) return;
             NewsList NewsListnewsListList = new NewsList();
             SelectedFilterColums = SearchColumnComboBox.SelectedItem.ToString();
@@ -149,7 +150,7 @@ namespace DobroNewsLine
         public bool Contains(object de)
         {
             NewsItem order = de as NewsItem;
-            if (SelectedFilterValue == String.Empty)
+            if (SelectedFilterValue == String.Empty && SelectedFilterColums != "Show favor")
             {
                 return true;
             }
@@ -164,6 +165,10 @@ namespace DobroNewsLine
             else if (SelectedFilterColums == "City")
             {
                 return (order.CityRegion.IndexOf(SelectedFilterValue, StringComparison.OrdinalIgnoreCase) >= 0);
+            }
+            else if (SelectedFilterColums == "Show favor")
+            {
+                return (order.IsFavorite);
             }
             else if (SelectedFilterColums == "Body")
             {
