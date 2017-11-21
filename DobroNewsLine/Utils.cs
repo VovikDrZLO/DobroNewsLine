@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Security;
 using System.Security.Cryptography;
 using System.Runtime.InteropServices;
-using System.Windows.Controls;
+//using System.Windows.Controls;
 using System.Windows.Input;
 using System.Diagnostics;
 using System.Xml;
@@ -37,6 +37,36 @@ namespace DobroNewsLine
             }
         }
 
+
+        public static string GetAppImgDir()
+        {
+            string appPath = System.AppDomain.CurrentDomain.BaseDirectory + @"\Images\";
+            if (Directory.Exists(appPath) == false)
+            {
+                Directory.CreateDirectory(appPath);
+            }
+            return appPath;
+        }
+
+
+        public static PictObj SaveImage(string ImgUrl)
+        {
+            string appPath = GetAppImgDir();
+            try { 
+                byte[] ImgByteStream = new WebClient().DownloadData(ImgUrl);
+                MemoryStream strmImg = new MemoryStream(ImgByteStream);
+                Image i = Image.FromStream(strmImg);
+                Guid ImageGuid = Guid.NewGuid();
+                string ImagePath = ImageGuid.ToString() + ".Dobro";
+                i.Save(appPath + ImagePath);
+                return new PictObj { GUID = ImageGuid, FilePath = ImagePath }; 
+            }
+            catch
+            {
+                return new PictObj { GUID = Guid.Empty, FilePath = "" }; 
+            }
+            
+        }
 
         static public void ShowWarningDialog(string Message)
         {
@@ -169,15 +199,15 @@ namespace DobroNewsLine
         static public string GenerateCryptFilePath(string FilePath)
         {
             return string.Concat(System.IO.Path.GetDirectoryName(FilePath), @"\", System.IO.Path.GetFileName(FilePath), "CrypDobFilm");
-        }       
+        }
 
-        public static Image GetImageByBase64Str(string Base64String)
+        public static System.Windows.Controls.Image GetImageByBase64Str(string Base64String)
         {
             if (Base64String == string.Empty)
             {
                 return null;
             }
-            Image img = new Image();
+            System.Windows.Controls.Image img = new System.Windows.Controls.Image();
             byte[] imageBytes;
             try
             {

@@ -31,17 +31,22 @@ namespace DobroNewsLine
                                 if (reader.Name == "advert")
                                 {                                    
                                     var Current = reader.ReadSubtree();
-                                    List<PictObj> PictList = new List<PictObj>();
+                                    List<PictObj> PictList = new List<PictObj>();                                    
                                     while (Current.Read()) 
                                     {
                                         if (Current.NodeType == XmlNodeType.Element && Current.Name == "Pict")
                                         {                                           
-                                            PictObj CurrPictObj = new PictObj { Base64Data = Current.GetAttribute("base64Data"), 
-                                                                                UID = Convert.ToInt16(Current.GetAttribute("UID")) };
-                                            PictList.Add(CurrPictObj);
+                                            PictObj CurrPictObj = new PictObj { GUID = new Guid(Current.GetAttribute("GUID")),
+                                                                                FilePath = Current.GetAttribute("FilePath")
+                                            };
+                                            PictList.Add(CurrPictObj);                                            
                                         }
                                     }
-                                    NewsClass.DefPictId = Convert.ToInt16(reader.GetAttribute("defPictId"));
+                                    string DefPictId = reader.GetAttribute("defPictId");
+                                    if (DefPictId != null)
+                                    {
+                                        NewsClass.DefPictId = new Guid(DefPictId);
+                                    }                                    
                                     NewsClass.Body = reader.GetAttribute("body");
                                     NewsClass.UID = new Guid(reader.GetAttribute("UID"));
                                     NewsClass.Title = reader.GetAttribute("title");
@@ -54,14 +59,18 @@ namespace DobroNewsLine
                                     NewsClass.IsFavorite = Convert.ToBoolean(Convert.ToInt16(reader.GetAttribute("IsFavorite")));
                                     string UIds = reader.GetAttribute("TegCollection");
                                     NewsClass.PictList = PictList;
-                                    NewsClass.PictCount = PictList.Count;
+                                    NewsClass.PictCount = PictList.Count;                                    
                                     if (!string.IsNullOrEmpty(UIds))
                                     {
                                         NewsClass.Tegs = UIds.Split(':');
                                     }
+/*                                    if (PictListCount > 0) delete later
+                                    {
+                                        NewsClass.DefPict = GetBitmapImageFromBase64(GetDefBase64DataFromXmlDocument(NewsXml, NewsClass));
+                                    }*/
                                     if (PictList.Count > 0)
-                                    {                                        
-                                        NewsClass.DefPict = GetBitmapImageFromBase64(GetDefBase64DataFromNewsItem(NewsClass));
+                                    {
+                                        NewsClass.DefPict = GetBitmapImageFromFilePath(GetDefPictFilePathFromNewsItem(NewsClass));
                                     }
                                     _news.Add(NewsClass);
                                     NewsClass = new NewsItem();
@@ -81,14 +90,15 @@ namespace DobroNewsLine
 
                     }                    
                     var NewsList = (ListCollectionView)CollectionViewSource.GetDefaultView(_news);
+                    NewsXml = null;
                     return NewsList;
                 }
             }
         }
 
-        private BitmapImage GetBitmapImageFromBase64(string Base64Data)
+        private BitmapImage GetBitmapImageFromFilePath(string FilePath)
         {
-            byte[] imageBytes;
+            /*byte[] imageBytes;
             try
             {
                 imageBytes = Convert.FromBase64String(Base64Data);
@@ -103,17 +113,32 @@ namespace DobroNewsLine
             myBitmapImage.StreamSource = strmImg;
             myBitmapImage.DecodePixelWidth = 200; //Величина картинки.
             myBitmapImage.EndInit();
+            return myBitmapImage;*/
+            Uri FileUri = new Uri(Utils.GetAppImgDir() + FilePath);
+            BitmapImage myBitmapImage = new BitmapImage(FileUri);
             return myBitmapImage;
         }
 
-        private string GetDefBase64DataFromNewsItem(NewsItem NewsClass)
+        private string GetDefPictFilePathFromNewsItem(NewsItem NewsClass)
         {
-            if (NewsClass.DefPictId == 0)
+            if (NewsClass.DefPictId == Guid.Empty)
             {
-                NewsClass.DefPictId = 1;
+                return NewsClass.PictList[0].FilePath;
             }
-            return NewsClass.PictList.Where(m => m.UID == NewsClass.DefPictId).Single().Base64Data;
+            return NewsClass.PictList.Where(m => m.GUID == NewsClass.DefPictId).Single().FilePath;
         }
+
+        /*private string GetDefBase64DataFromXmlDocument(XmlDocument NewsXml, NewsItem NewsClass) //delete later
+        {
+            Guid AdvertId = NewsClass.UID;
+            int DefPictId = NewsClass.DefPictId;
+            if (DefPictId == 0)
+            {
+                DefPictId = 1;
+            }            
+            XmlNode PictNode = NewsXml.SelectSingleNode(("//advert[@UID='" + AdvertId + "']/Pict[@UID='" + DefPictId + "']"));
+            return PictNode.Attributes["base64Data"].Value;
+        }*/
     }
 
 
@@ -140,16 +165,20 @@ namespace DobroNewsLine
         public string[] Tegs { get; set; }
         public decimal Price { get; set; }
         public BitmapImage DefPict { get; set; }
-        public int DefPictId { get; set; }
+        public Guid DefPictId { get; set; }
         public int PictCount { get; set; }
         public bool IsFavorite { get; set; }
     }
 
     public class PictObj
     {
-        public string Base64Data { get; set; }
+        public string Base64Data { get; set; } // delete later
 
-        public int UID { get; set; }
+        public int UID { get; set; } // delete later
+
+        public Guid GUID { get; set; }
+
+        public string FilePath { get; set; }
     }
 
     public class NewsTeg

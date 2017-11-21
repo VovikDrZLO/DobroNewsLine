@@ -29,10 +29,8 @@ namespace DobroNewsLine
     //5. Teg filtration
     //6. Import whith filtration    
     //11. Notes
-    //12. LastImageDeleteBug
-    //13. LoadAllPictsInEditPage    
-    //15. Age
-    //16. Favorite
+    //12. LastImageDeleteBug        
+    //15. Age    
 
     //DONE
     //1. Import photo merge +
@@ -42,7 +40,9 @@ namespace DobroNewsLine
     //8. Main Pict in grid +
     //9. Get CategotyId List +
     //10. Reload main grid +
+    //13. StoreImagesInFileSystem + 
     //14. Pict counter +
+    //16. Favorite +
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -181,6 +181,12 @@ namespace DobroNewsLine
         private void ClearFilter_Click(object sender, RoutedEventArgs e)
         {
             FilterValueTextBox.Text = "";
+        }
+
+        private void ConvertXMLRepIntoFile()
+        {
+            XDocument XDoc = SettingsXMLDoc;
+            
         }
 
         private void OpenImportWnd_Click(object sender, RoutedEventArgs e)

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +26,8 @@ namespace DobroNewsLine
             }
         }
 
-        public static void PictInAdvert(string PictBase64String, XElement CurrentElement)
+        
+        public static void PictInAdvert(string PictBase64String, XElement CurrentElement) //delete later
         {
             bool AreEqual = true;
             foreach (XElement Pict in CurrentElement.Elements())
@@ -35,12 +38,23 @@ namespace DobroNewsLine
                 {
                     return;
                 }
-            }            
-            //XElement Pictlement = new XElement("Pict",
-              //  new XAttribute("base64Data", PictBase64String)
-            //);
-            //CurrentElement.Add(Pictlement);            
+            }
             AddPictToElement(PictBase64String, CurrentElement);        
+        }
+
+        public static void PictMerge(PictObj CurrPictObj, XElement ExistsItem)
+        {
+            bool AreEqual = true;
+            foreach (XElement Pict in ExistsItem.Elements())
+            {
+                AreEqual = ImageCompareString(Pict.Attribute("FilePath").Value, CurrPictObj.FilePath);
+                if (AreEqual)
+                {
+                    File.Delete(CurrPictObj.FilePath);
+                    return;
+                }
+            }
+            AddPictToElement(CurrPictObj, ExistsItem); 
         }
 
         public static void MergeXElements(NewsItem NewItem, XDocument CurrentDoc)
@@ -53,10 +67,33 @@ namespace DobroNewsLine
             {
                 foreach (PictObj CurrPictObj in NewItem.PictList)
                 {
-                    PictInAdvert(CurrPictObj.Base64Data, OldItem);
+                    //PictInAdvert(CurrPictObj.Base64Data, OldItem); //delete later
+                    PictMerge(CurrPictObj, OldItem);
                 }
             }
         }
+
+            public static bool ImageCompareString(string FirstImageFilePath, string SecondImageFilePath)
+            {
+                Bitmap firstImage = new Bitmap(FirstImageFilePath);
+                Bitmap secondImage = new Bitmap(SecondImageFilePath);
+                MemoryStream ms = new MemoryStream();
+                firstImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                String firstBitmap = Convert.ToBase64String(ms.ToArray());
+                ms.Position = 0;
+    
+                secondImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                String secondBitmap = Convert.ToBase64String(ms.ToArray());
+    
+                if (firstBitmap.Equals(secondBitmap))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
 
         public static void SaveAdvertData(NewsItem AdvertItem)
         {
@@ -67,7 +104,7 @@ namespace DobroNewsLine
             }
             else
             {
-                MergeXElements(AdvertItem, CurrentDoc);
+                //MergeXElements(AdvertItem, CurrentDoc);
             }
             string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
             CurrentDoc.Save(DataFilePath);
@@ -84,7 +121,7 @@ namespace DobroNewsLine
                 }
                 else
                 {
-                    MergeXElements(AdvertItem, CurrentDoc);
+                    //MergeXElements(AdvertItem, CurrentDoc);
                 }
             }
             string DataFilePath = DobroNewsLine.Properties.Resources.DataFilePath;
@@ -130,35 +167,42 @@ namespace DobroNewsLine
             {
                 AddAttribute(AdvertItemXElement, "phone", AdvertItem.Phone);
             }
-            if (AdvertItem.DefPictId != 0)
+            if (AdvertItem.DefPictId != Guid.Empty)
             {
                 AddAttribute(AdvertItemXElement, "defPictId", AdvertItem.DefPictId.ToString());
             }
 
             if (AdvertItem.PictList != null)
             {
-                int PictCnt = 1;
+                //int PictCnt = 1; // delete later
                 foreach (PictObj CurrPictObj in AdvertItem.PictList)
                 {
-                    AddPictToElement(CurrPictObj.Base64Data, AdvertItemXElement, PictCnt);
-                    PictCnt++;
+                    AddPictToElement(CurrPictObj, AdvertItemXElement); // delete later
+                    //AddPictToElement(CurrPictObj.Base64Data, AdvertItemXElement, PictCnt); // delete later
+                    //PictCnt++; // delete later
                 }
-                AddAttribute(AdvertItemXElement, "lastPictId", PictCnt.ToString());
+                //AddAttribute(AdvertItemXElement, "lastPictId", PictCnt.ToString()); // delete later
             }
-            else
+            /*else // delete later
             {
-                AddAttribute(AdvertItemXElement, "lastPictId", "0");
-            }
+                AddAttribute(AdvertItemXElement, "lastPictId", "0"); 
+            }*/
             return AdvertItemXElement;
         }
 
-        private static void AddPictToElement(string PictStr, XElement NewsItemXElement, int PictCnt)
+        private static void AddPictToElement(PictObj CurrPictObj, XElement NewsItemXElement) 
+        {
+            XElement PictlEment = new XElement("Pict", new XAttribute("GUID", CurrPictObj.GUID), new XAttribute("FilePath", CurrPictObj.FilePath));
+            NewsItemXElement.Add(PictlEment);
+        }
+
+        private static void AddPictToElement(string PictStr, XElement NewsItemXElement, int PictCnt) // delete later
         {
             XElement PictlEment = new XElement("Pict", new XAttribute("UID", PictCnt), new XAttribute("base64Data", PictStr));
             NewsItemXElement.Add(PictlEment);
         }
 
-        private static void AddPictToElement(string PictStr, XElement NewsItemXElement)
+        private static void AddPictToElement(string PictStr, XElement NewsItemXElement) // delete later
         {
             string PictCnt = NewsItemXElement.Attribute("lastPictId").Value;
             int PictCntInt = Convert.ToInt16(PictCnt);
@@ -166,7 +210,7 @@ namespace DobroNewsLine
             NewsItemXElement.Add(PictlEment);
             NewsItemXElement.SetAttributeValue("lastPictId", PictCntInt);
         }
-
+        
         private static void AddAttribute(XElement XMLElement, string AttributeName, string AttributeValue)
         {
             XAttribute attribute = new XAttribute(AttributeName, AttributeValue);

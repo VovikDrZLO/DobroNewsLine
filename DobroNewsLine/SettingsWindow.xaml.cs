@@ -45,7 +45,8 @@ namespace DobroNewsLine
             {
                 CityName = "kiev";
             }
-            Task.Run(() => ParthingSite(SubsectionId, PagesCount, CityName));            
+            //Task.Run(() => ParthingSite(SubsectionId, PagesCount, CityName));            
+            ParthingSite(SubsectionId, PagesCount, CityName);            
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
@@ -57,7 +58,8 @@ namespace DobroNewsLine
         private void GetCategoryCollection()
         {
             CategorisDict = new Dictionary<int, string>();
-            Uri uri = new Uri("http://ukrgo.ua");
+            string WebSiteName = DobroNewsLine.Properties.Settings.Default.SitePath;
+            Uri uri = new Uri(WebSiteName);
             string html = new WebClient().DownloadString(uri);
             var parser = new HtmlParser();
             IHtmlDocument document = parser.Parse(html);
@@ -66,30 +68,32 @@ namespace DobroNewsLine
             foreach (var Link in mainСontentList)
             {
                 string FullLink = Link.Attributes[0].Value;
-                if (FullLink.Contains("http://ukrgo.ua/view_subsection.php?id_subsection="))
+                if (FullLink.Contains(WebSiteName + "/view_subsection.php?id_subsection="))
                 {
                     //Category CategoryItem = new Category();
                     //CategoryItem.Name = Link.InnerHtml;
                     int CategoryId;
-                    if (int.TryParse(FullLink.Replace("http://ukrgo.ua/view_subsection.php?id_subsection=", ""), out CategoryId))
+                    if (int.TryParse(FullLink.Replace(WebSiteName + "/view_subsection.php?id_subsection=", ""), out CategoryId))
                     {
                         CategorisDict.Add(CategoryId, Link.InnerHtml);
                     }
-                    //CategoryItem.Code = Convert.ToInt16(FullLink.Replace("http://ukrgo.ua/view_subsection.php?id_subsection=", ""));
+                    //CategoryItem.Code = Convert.ToInt16(FullLink.Replace(WebSiteName + "/view_subsection.php?id_subsection=", ""));
                     //CategoryList.Add(CategoryItem);                    
                 }
             }
         }
 
-        public async Task ParthingSite(string SubsectionId, string PagesCount, string CityName)
+        //public async Task ParthingSite(string SubsectionId, string PagesCount, string CityName)
+        public void ParthingSite(string SubsectionId, string PagesCount, string CityName)
         {
             int Counter = 0;
             int TotalCount = Convert.ToInt16(PagesCount) * 50;
-            UpdateWindow("Import Starts", StatusType.Starting);
+            string DomainName = DobroNewsLine.Properties.Settings.Default.DomainName;            
+            //UpdateWindow("Import Starts", StatusType.Starting);
             List<NewsItem> NewsItemList = new List<NewsItem>();
             for (int cnt = 1; cnt <= Convert.ToInt16(PagesCount); cnt++)
             {                
-                Uri uri = new Uri("http://" + CityName + ".ukrgo.com/view_subsection.php?id_subsection=" + SubsectionId + "&search=&page=" + cnt);
+                Uri uri = new Uri("http://" + CityName + "." + DomainName + ".com/view_subsection.php?id_subsection=" + SubsectionId + "&search=&page=" + cnt);
                 string html = new WebClient().DownloadString(uri);
                 var parser = new HtmlParser();
                 var document = parser.Parse(html);
@@ -106,15 +110,17 @@ namespace DobroNewsLine
                     AddPageData(newsItem);
                     NewsItemList.Add(newsItem);
                     Counter++;
-                    UpdateWindow("In progress " + Counter + "/" + TotalCount, StatusType.Importing);
+                    //UpdateWindow("In progress " + Counter + "/" + TotalCount, StatusType.Importing);
                 }                
             }
             XMLUtils.SaveAdvertData(NewsItemList);
-            UpdateWindow("Import Complite!!!", StatusType.Finish);
+            //UpdateWindow("Import Complite!!!", StatusType.Finish);
         }        
 
         public void AddPageData(NewsItem newsItem)
-        { 
+        {
+            string SitePathCom = DobroNewsLine.Properties.Settings.Default.SitePathCom;   
+
             Uri uri = newsItem.Link;
             string html;
             try
@@ -139,8 +145,17 @@ namespace DobroNewsLine
                     for (int cnt = 0; cnt < imgList.Length; cnt++)
                     {
                         string ImgLinkRight = imgList[cnt].GetAttribute("src");
-                        var ImgLink = "http://ukrgo.com" + ImgLinkRight.Substring(1);
-                        string ImgBase64String = Utils.ConvertImage(ImgLink);
+                        var ImgLink = SitePathCom + ImgLinkRight.Substring(1);
+                        PictObj PictObjData = Utils.SaveImage(ImgLink);
+                        if (!PictObjData.GUID.Equals(Guid.Empty))
+                        {
+                            if (newsItem.PictList == null)
+                            {
+                                newsItem.PictList = new List<PictObj>();
+                            }
+                            newsItem.PictList.Add(PictObjData);
+                        }
+                        /*string ImgBase64String = Utils.ConvertImage(ImgLink);
                         if (ImgBase64String.Length > 0)
                         {
                             if (newsItem.PictList == null)
@@ -149,7 +164,7 @@ namespace DobroNewsLine
                             }
                             PictObj CurrPictObj = new PictObj { Base64Data = ImgBase64String, UID = cnt };
                             newsItem.PictList.Add(CurrPictObj);
-                        }
+                        }*/
                     }
                 }
                 ////////////////
