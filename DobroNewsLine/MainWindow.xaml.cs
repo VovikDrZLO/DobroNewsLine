@@ -21,6 +21,7 @@ using System.Xml.Schema;
 using System.Xml.XPath;
 using System.Xml;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace DobroNewsLine
 {
@@ -31,6 +32,7 @@ namespace DobroNewsLine
     //11. Notes
     //12. LastImageDeleteBug        
     //15. Age    
+    //17. Converter
 
     //DONE
     //1. Import photo merge +
@@ -48,6 +50,7 @@ namespace DobroNewsLine
         public MainWindow()
         {
             InitializeComponent();
+            ConvertXMLRepIntoFile();
             ObservableCollection<string> list = new ObservableCollection<string>();
             list.Add("Show favor");
             list.Add("Title");
@@ -186,7 +189,32 @@ namespace DobroNewsLine
         private void ConvertXMLRepIntoFile()
         {
             XDocument XDoc = SettingsXMLDoc;
-            
+            foreach (XElement news in XDoc.Root.Elements())
+            {
+                Guid DefPictId = Guid.Empty;
+                foreach (XElement Pict in news.Elements())
+                {
+                    string Base64Pict = (string)Pict.Attribute("base64Data");                    
+                    if (!string.IsNullOrEmpty(Base64Pict))
+                    {
+                        byte[] binaryData = Convert.FromBase64String(Base64Pict);                        
+                        MemoryStream Ms = new MemoryStream(binaryData);
+                        System.Drawing.Image NewImage = System.Drawing.Image.FromStream(Ms);
+                        string appPath = Utils.GetAppImgDir();
+                        Guid ImageGuid = Guid.NewGuid();
+                        DefPictId = ImageGuid;
+                        string ImagePath = ImageGuid.ToString() + ".Dobro";
+                        NewImage.Save(appPath + ImagePath);
+                        //XElement PictlEment = new XElement("Pict", new XAttribute("GUID", ImageGuid), new XAttribute("FilePath", ImagePath));
+                        //Pict.ReplaceWith(PictlEment);
+                        Pict.SetAttributeValue("base64Data", "");
+                        Pict.SetAttributeValue("GUID", ImageGuid.ToString());
+                        Pict.SetAttributeValue("FilePath", ImagePath);
+                    }                    
+                }
+                news.SetAttributeValue("defPictId", DefPictId.ToString());
+            }
+            XDoc.Save(DobroNewsLine.Properties.Resources.DataFilePath);
         }
 
         private void OpenImportWnd_Click(object sender, RoutedEventArgs e)

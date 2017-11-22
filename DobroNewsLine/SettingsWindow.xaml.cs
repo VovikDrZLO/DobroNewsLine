@@ -45,8 +45,8 @@ namespace DobroNewsLine
             {
                 CityName = "kiev";
             }
-            //Task.Run(() => ParthingSite(SubsectionId, PagesCount, CityName));            
-            ParthingSite(SubsectionId, PagesCount, CityName);            
+            Task.Run(() => ParthingSite(SubsectionId, PagesCount, CityName));            
+            //ParthingSite(SubsectionId, PagesCount, CityName);            
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
@@ -83,13 +83,13 @@ namespace DobroNewsLine
             }
         }
 
-        //public async Task ParthingSite(string SubsectionId, string PagesCount, string CityName)
-        public void ParthingSite(string SubsectionId, string PagesCount, string CityName)
+        //public void ParthingSite(string SubsectionId, string PagesCount, string CityName)
+        public async Task ParthingSite(string SubsectionId, string PagesCount, string CityName)        
         {
             int Counter = 0;
             int TotalCount = Convert.ToInt16(PagesCount) * 50;
             string DomainName = DobroNewsLine.Properties.Settings.Default.DomainName;            
-            //UpdateWindow("Import Starts", StatusType.Starting);
+            UpdateWindow("Import Starts", StatusType.Starting);
             List<NewsItem> NewsItemList = new List<NewsItem>();
             for (int cnt = 1; cnt <= Convert.ToInt16(PagesCount); cnt++)
             {                
@@ -110,11 +110,11 @@ namespace DobroNewsLine
                     AddPageData(newsItem);
                     NewsItemList.Add(newsItem);
                     Counter++;
-                    //UpdateWindow("In progress " + Counter + "/" + TotalCount, StatusType.Importing);
+                    UpdateWindow("In progress " + Counter + "/" + TotalCount, StatusType.Importing);
                 }                
             }
             XMLUtils.SaveAdvertData(NewsItemList);
-            //UpdateWindow("Import Complite!!!", StatusType.Finish);
+            UpdateWindow("Import Complite!!!", StatusType.Finish);
         }        
 
         public void AddPageData(NewsItem newsItem)
